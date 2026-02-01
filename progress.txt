@@ -267,3 +267,27 @@
   - Return same 404 error for both "not found" and "not owned" to prevent information leakage
   - Status endpoint pattern: minimal payload, single DB query, no nested relations except for ownership check
 ---
+
+## Iteration 15 - US-015: File Upload with Tier Validation
+- What was implemented:
+  - POST /api/upload/presigned-url - generates presigned URL for S3-compatible storage (Railway Buckets)
+  - Validates file type (PDF/PNG/JPG/TIFF only) via MIME type
+  - Tier-based size limits: FREE <= 10MB, PRO <= 100MB
+  - Returns upload_url, file_key, document_type, expires_in
+  - POST /api/upload/confirm - verifies file exists in bucket, returns page count
+  - Page count detection for PDFs via /Count or /N patterns in PDF trailer
+  - Heuristic fallback for page count estimation (~75KB per page)
+  - AWS Signature Version 4 signing for S3-compatible bucket access
+  - File key ownership verification (uploads scoped to user ID prefix)
+  - Added BUCKET_URL, BUCKET_ACCESS_KEY, BUCKET_SECRET_KEY, BUCKET_REGION env vars
+- Files changed:
+  - app/src/app/api/upload/presigned-url/route.ts (new) - Presigned URL generation endpoint
+  - app/src/app/api/upload/confirm/route.ts (new) - Upload confirmation endpoint
+  - app/.env.example (modified) - Added bucket configuration env vars
+- Learnings for future iterations:
+  - AWS Signature V4 requires specific header ordering and canonical request format
+  - For PDF page count, /Count pattern in trailer is most reliable; /N is for linearized PDFs
+  - Use Range header to fetch only PDF trailer (last 10KB) for page count detection
+  - File key should include user ID prefix for ownership verification
+  - Presigned URLs need content-type in signed headers for PUT operations
+---

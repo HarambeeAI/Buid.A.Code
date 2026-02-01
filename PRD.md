@@ -413,10 +413,10 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a user, I want document upload with type and size checks.
 
 **Acceptance Criteria:**
-- [ ] Presigned URL validates: PDF/PNG/JPG/TIFF types, FREE <= 10MB, PRO <= 100MB
-- [ ] Returns uploadUrl, fileKey
-- [ ] Confirm verifies existence, returns pageCount
-- [ ] Typecheck passes
+- [x] Presigned URL validates: PDF/PNG/JPG/TIFF types, FREE <= 10MB, PRO <= 100MB
+- [x] Returns uploadUrl, fileKey
+- [x] Confirm verifies existence, returns pageCount
+- [x] Typecheck passes
 
 ### US-016: Building Codes Public Endpoints
 **Description:** As a user, I want to browse codes.
