@@ -45,9 +45,20 @@ export function unauthorized(message = "Authentication required") {
   );
 }
 
-export function forbidden(message = "Forbidden") {
+export function forbidden(message = "Forbidden", code?: string) {
   return NextResponse.json(
-    { error: "Forbidden", message },
+    { error: "Forbidden", message, ...(code && { code }) },
+    { status: 403 }
+  );
+}
+
+export function adminForbidden() {
+  return NextResponse.json(
+    {
+      error: "Forbidden",
+      message: "Admin access required",
+      code: "ADMIN_REQUIRED",
+    },
     { status: 403 }
   );
 }
