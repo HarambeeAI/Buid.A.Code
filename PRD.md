@@ -430,9 +430,9 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a user, I want to request codes.
 
 **Acceptance Criteria:**
-- [ ] POST creates request (SUBMITTED), GET lists user's requests with status
-- [ ] Auth required
-- [ ] Typecheck passes
+- [x] POST creates request (SUBMITTED), GET lists user's requests with status
+- [x] Auth required
+- [x] Typecheck passes
 
 ### US-018: Report Export (Pro Only)
 **Description:** As a Pro user, I want PDF export.

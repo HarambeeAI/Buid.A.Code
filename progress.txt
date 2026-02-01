@@ -291,3 +291,36 @@
   - File key should include user ID prefix for ownership verification
   - Presigned URLs need content-type in signed headers for PUT operations
 ---
+
+## Iteration 16 - US-016: Building Codes Public Endpoints
+- What was implemented:
+  - GET /api/regions - returns list of supported regions with flags (AU, UK, US)
+  - GET /api/regions/:region/codes - returns ACTIVE codes for a region with requirement_count
+  - Region metadata includes code, name, flag (emoji), and flag_url for SVG assets
+  - Returns 404 for unknown regions (validates against AU, UK, US)
+  - Only ACTIVE building codes are returned
+  - requirement_count shows count of PUBLISHED requirements per code
+  - Public endpoints - no authentication required
+- Files changed:
+  - app/src/app/api/regions/route.ts (new) - Regions list endpoint
+  - app/src/app/api/regions/[region]/codes/route.ts (new) - Codes for region endpoint
+- Learnings for future iterations:
+  - Public endpoints don't need the requireAuth() helper
+  - Use Prisma _count with where clause to count only PUBLISHED requirements
+  - Region validation uses array includes() with uppercase normalization
+---
+
+## Iteration 17 - US-017: Code Request Endpoints
+- What was implemented:
+  - POST /api/code-requests - creates code request with SUBMITTED status
+  - GET /api/code-requests - lists user's code requests with status and resolved code info
+  - Validates code_name (required, max 255), region (AU/UK/US), description (optional, max 2000), reference_url (optional, valid URL)
+  - Returns full request details including resolvedCode relation when available
+  - Auth required for both endpoints
+- Files changed:
+  - app/src/app/api/code-requests/route.ts (new) - POST and GET endpoints
+- Learnings for future iterations:
+  - Zod v4 uses `message` instead of `errorMap` for custom error messages on enums
+  - Use `z.enum(["A", "B"], { message: "..." })` for custom enum error messages
+  - Include related records (like resolvedCode) in GET responses for better UX
+---
