@@ -710,11 +710,11 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As an admin, I want to manage user requests.
 
 **Acceptance Criteria:**
-- [ ] /admin/code-requests grouped by code_name with request counts, sorted by count
-- [ ] Detail: user info, description, notes, status dropdown
-- [ ] Links to resolved_code_id when published
-- [ ] Typecheck passes
-- [ ] Verify changes work in browser
+- [x] /admin/code-requests grouped by code_name with request counts, sorted by count
+- [x] Detail: user info, description, notes, status dropdown
+- [x] Links to resolved_code_id when published
+- [x] Typecheck passes
+- [x] Verify changes work in browser
 
 ### US-046: User - Code Request Form
 **Description:** As a user, I want to request missing codes.

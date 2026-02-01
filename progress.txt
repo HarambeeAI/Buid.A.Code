@@ -1009,3 +1009,30 @@
   - Use $transaction for atomicity when updating code + requirements together
   - 307 redirect for authenticated pages during curl test is expected behavior
 ---
+
+## Iteration 46 - US-045: Admin - Code Request Triage
+- What was implemented:
+  - GET /api/admin/code-requests endpoint with grouping by code_name + region
+  - Groups sorted by request count (highest first)
+  - Each group includes status counts, most recent request, and all requests
+  - GET /api/admin/code-requests/:id endpoint for single request details
+  - PATCH /api/admin/code-requests/:id endpoint for updating status, admin_notes, resolved_code_id
+  - /admin/code-requests page with grouped view (left panel) and detail panel (right)
+  - Groups display code_name, region flag, request count, and status distribution badges
+  - Detail panel shows all requests for a group, with drill-down to individual request
+  - Request detail includes: user info, dates, description, reference URL
+  - Editable fields: status dropdown, link to building code, admin notes
+  - Currently linked code shown with link to admin codes page
+  - Save button updates request via PATCH API
+- Files changed:
+  - app/src/app/api/admin/code-requests/route.ts (new) - GET endpoint with grouping
+  - app/src/app/api/admin/code-requests/[id]/route.ts (new) - GET and PATCH endpoints
+  - app/src/app/admin/code-requests/page.tsx (new) - Admin triage UI
+  - PRD.md (modified) - Marked US-045 complete
+- Learnings for future iterations:
+  - Prisma groupBy supports ordering by _count for sorting groups by popularity
+  - Two-panel layout pattern: left panel with groups, right panel with details
+  - Admin middleware returns 307 redirect for pages (to login), 401 for API routes
+  - Use Promise.all with groupBy results to enrich each group with full request data
+  - Status filter can be applied to groupBy query via where clause
+---
