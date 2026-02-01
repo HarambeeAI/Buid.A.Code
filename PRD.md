@@ -316,10 +316,10 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a developer, I need supporting tables.
 
 **Acceptance Criteria:**
-- [ ] CodeRequest: id, user_id FK, code_name, region, description nullable, reference_url nullable, status enum (5 values), admin_notes nullable, resolved_code_id nullable FK, created_at, updated_at
-- [ ] ShareToken: id, analysis_id FK, token unique, is_active default true, created_at
-- [ ] Migration runs
-- [ ] Typecheck passes
+- [x] CodeRequest: id, user_id FK, code_name, region, description nullable, reference_url nullable, status enum (5 values), admin_notes nullable, resolved_code_id nullable FK, created_at, updated_at
+- [x] ShareToken: id, analysis_id FK, token unique, is_active default true, created_at
+- [x] Migration runs
+- [x] Typecheck passes
 
 ### US-006: Seed Data - Building Codes and Sample Requirements
 **Description:** As a developer, I need seed data for launch codes.

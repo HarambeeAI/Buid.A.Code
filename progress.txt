@@ -80,3 +80,22 @@
   - Use `Unsupported("vector(768)")` in Prisma schema for pgvector types
   - When adding a FK relation like published_by, add the reverse relation on the parent model (User.publishedCodes)
 ---
+
+## Iteration 5 - US-005: Schema - CodeRequest and ShareToken
+- What was implemented:
+  - Added CodeRequest model with all required fields: id (UUID), user_id (FK to User), code_name, region (Region enum), description (nullable), reference_url (nullable), status (CodeRequestStatus enum: SUBMITTED/UNDER_REVIEW/IN_PROGRESS/PUBLISHED/DECLINED), admin_notes (nullable), resolved_code_id (nullable FK to BuildingCode), timestamps
+  - Added ShareToken model: id (UUID), analysis_id (FK to Analysis), token (unique), is_active (default true), created_at
+  - Added CodeRequestStatus enum with 5 values
+  - Cascade delete: User -> CodeRequests, Analysis -> ShareTokens
+  - SetNull on delete for resolved_code_id FK
+  - Added codeRequests relation on User model
+  - Added shareTokens relation on Analysis model
+  - Added resolvedCodeRequests relation on BuildingCode model
+  - Created migration SQL file
+- Files changed:
+  - app/prisma/schema.prisma (modified - added enum, CodeRequest, ShareToken models, updated relations)
+  - app/prisma/migrations/0005_code_request_and_share_token/migration.sql (new)
+- Learnings for future iterations:
+  - When adding FK relations with nullable references, use SetNull on delete behavior
+  - Remember to add reverse relations on all referenced models (User.codeRequests, Analysis.shareTokens, BuildingCode.resolvedCodeRequests)
+---

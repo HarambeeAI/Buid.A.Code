@@ -101,6 +101,15 @@ enum CheckType {
   BOOLEAN_CHECK
 }
 
+// Enums for CodeRequest - US-005
+enum CodeRequestStatus {
+  SUBMITTED
+  UNDER_REVIEW
+  IN_PROGRESS
+  PUBLISHED
+  DECLINED
+}
+
 // User model - US-001
 model User {
   id                 String    @id @default(uuid()) @db.Uuid
@@ -114,9 +123,10 @@ model User {
   updated_at         DateTime  @updatedAt
 
   // Relations
-  projects      Project[]
-  folders       Folder[]
+  projects       Project[]
+  folders        Folder[]
   publishedCodes BuildingCode[]
+  codeRequests   CodeRequest[]
 
   @@map("users")
 }
@@ -181,8 +191,9 @@ model Analysis {
   created_at       DateTime       @default(now())
 
   // Relations
-  project  Project   @relation(fields: [project_id], references: [id], onDelete: Cascade)
-  findings Finding[]
+  project     Project      @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  findings    Finding[]
+  shareTokens ShareToken[]
 
   @@map("analyses")
 }
@@ -228,8 +239,9 @@ model BuildingCode {
   created_at          DateTime           @default(now())
 
   // Relations
-  publisher    User?             @relation(fields: [published_by], references: [id], onDelete: SetNull)
-  requirements CodeRequirement[]
+  publisher              User?             @relation(fields: [published_by], references: [id], onDelete: SetNull)
+  requirements           CodeRequirement[]
+  resolvedCodeRequests   CodeRequest[]
 
   @@map("building_codes")
 }
@@ -260,4 +272,39 @@ model CodeRequirement {
   building_code BuildingCode @relation(fields: [building_code_id], references: [id], onDelete: Cascade)
 
   @@map("code_requirements")
+}
+
+// CodeRequest model - US-005
+model CodeRequest {
+  id               String            @id @default(uuid()) @db.Uuid
+  user_id          String            @db.Uuid
+  code_name        String
+  region           Region
+  description      String?
+  reference_url    String?
+  status           CodeRequestStatus @default(SUBMITTED)
+  admin_notes      String?
+  resolved_code_id String?           @db.Uuid
+  created_at       DateTime          @default(now())
+  updated_at       DateTime          @updatedAt
+
+  // Relations
+  user         User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  resolvedCode BuildingCode? @relation(fields: [resolved_code_id], references: [id], onDelete: SetNull)
+
+  @@map("code_requests")
+}
+
+// ShareToken model - US-005
+model ShareToken {
+  id          String   @id @default(uuid()) @db.Uuid
+  analysis_id String   @db.Uuid
+  token       String   @unique
+  is_active   Boolean  @default(true)
+  created_at  DateTime @default(now())
+
+  // Relations
+  analysis Analysis @relation(fields: [analysis_id], references: [id], onDelete: Cascade)
+
+  @@map("share_tokens")
 }
