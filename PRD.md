@@ -498,10 +498,10 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a user, I want project analysis list.
 
 **Acceptance Criteria:**
-- [ ] /projects/:id with name, description, analysis table (doc name, type icon, status, score, report_ref, date, actions)
-- [ ] New Analysis opens wizard, empty state
-- [ ] Typecheck passes
-- [ ] Verify changes work in browser
+- [x] /projects/:id with name, description, analysis table (doc name, type icon, status, score, report_ref, date, actions)
+- [x] New Analysis opens wizard, empty state
+- [x] Typecheck passes
+- [x] Verify changes work in browser
 
 ### US-025: Wizard Step 1 - Upload + Details
 **Description:** As a user, I want to upload and provide context.
