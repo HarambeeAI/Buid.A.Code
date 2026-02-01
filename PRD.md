@@ -438,10 +438,10 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a Pro user, I want PDF export.
 
 **Acceptance Criteria:**
-- [ ] GET /api/analyses/:id/export generates professional PDF (cover, summary, findings by category, matrix, disclaimer)
-- [ ] 403 for FREE with upgrade message
-- [ ] Filename: BuildACode_Report_{report_ref}.pdf
-- [ ] Typecheck passes
+- [x] GET /api/analyses/:id/export generates professional PDF (cover, summary, findings by category, matrix, disclaimer)
+- [x] 403 for FREE with upgrade message
+- [x] Filename: BuildACode_Report_{report_ref}.pdf
+- [x] Typecheck passes
 
 ### US-019: Share Report Endpoints
 **Description:** As a user, I want shareable report links.
