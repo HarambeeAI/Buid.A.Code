@@ -447,10 +447,10 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a user, I want shareable report links.
 
 **Acceptance Criteria:**
-- [ ] POST generates token + public URL
-- [ ] GET /shared/reports/:token public read-only
-- [ ] DELETE revokes
-- [ ] Typecheck passes
+- [x] POST generates token + public URL
+- [x] GET /shared/reports/:token public read-only
+- [x] DELETE revokes
+- [x] Typecheck passes
 
 ### US-020: App Shell - Layout, Header, Sidebar
 **Description:** As a user, I want consistent navigation.
