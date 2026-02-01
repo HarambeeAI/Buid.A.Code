@@ -232,3 +232,22 @@
   - Return specific error codes in 403 responses to help UI display appropriate upgrade CTAs
   - Next.js 15+ uses [pid] pattern for nested dynamic routes
 ---
+
+## Iteration 13 - US-013: Analysis Read and Delete
+- What was implemented:
+  - GET /api/analyses/:id - returns analysis detail with project info and finding count
+  - GET /api/analyses/:id/findings - returns findings with pagination, filterable by category and status
+  - GET /api/analyses/:id/report - returns full report payload with findings grouped by category, summary stats, confidence breakdown
+  - DELETE /api/analyses/:id - removes analysis with cascade to findings and share tokens
+  - All endpoints require authentication and verify ownership via project.user_id
+  - Zod validation for all inputs including filter params
+- Files changed:
+  - app/src/app/api/analyses/[id]/route.ts (new) - GET detail and DELETE endpoints
+  - app/src/app/api/analyses/[id]/findings/route.ts (new) - GET findings with filters
+  - app/src/app/api/analyses/[id]/report/route.ts (new) - GET full report payload
+- Learnings for future iterations:
+  - Analysis ownership check goes through project relation (analysis.project.user_id)
+  - For report endpoint, group findings by category using a simple reduce pattern
+  - Prisma cascade on Analysis -> Findings and ShareTokens handles cleanup automatically
+  - Filter params need explicit type casting for enum values in where clause
+---

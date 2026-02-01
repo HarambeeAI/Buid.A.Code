@@ -395,10 +395,10 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a user, I want to view and manage analyses.
 
 **Acceptance Criteria:**
-- [ ] GET list, GET detail, GET findings (filterable by category/status), GET report (full payload)
-- [ ] DELETE removes analysis + findings
-- [ ] All scoped to owner
-- [ ] Typecheck passes
+- [x] GET list, GET detail, GET findings (filterable by category/status), GET report (full payload)
+- [x] DELETE removes analysis + findings
+- [x] All scoped to owner
+- [x] Typecheck passes
 
 ### US-014: Analysis Status Endpoint
 **Description:** As a developer, I need lightweight polling.
