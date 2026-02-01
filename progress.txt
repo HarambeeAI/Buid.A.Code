@@ -324,3 +324,73 @@
   - Use `z.enum(["A", "B"], { message: "..." })` for custom enum error messages
   - Include related records (like resolvedCode) in GET responses for better UX
 ---
+
+## Iteration 18 - US-018: Report Export (Pro Only)
+- What was implemented:
+  - GET /api/analyses/:id/export - generates professional PDF compliance report
+  - PRO tier only - FREE users get 403 with upgrade message and code "UPGRADE_REQUIRED"
+  - Professional PDF with 5 sections: Cover page, Executive Summary, Detailed Findings, Compliance Matrix, Methodology
+  - Cover page includes logo, report reference, project info, status badge, disclaimer
+  - Executive summary shows compliance score, findings breakdown
+  - Findings grouped by category with status badges, confidence levels, recommendations
+  - Compliance matrix table for quick reference
+  - Methodology appendix explaining the analysis pipeline
+  - Filename: BuildACode_Report_{report_ref}.pdf
+  - Validates analysis is COMPLETED before export
+- Files changed:
+  - app/src/lib/pdf-report.tsx (new) - React PDF components for report generation
+  - app/src/app/api/analyses/[id]/export/route.ts (new) - Export endpoint
+  - app/package.json (modified) - Added @react-pdf/renderer dependency
+- Learnings for future iterations:
+  - @react-pdf/renderer v4.x uses JSX directly for Document component
+  - Use factory function for createReportElement to avoid TypeScript issues with renderToBuffer
+  - Convert Buffer to Uint8Array for NextResponse compatibility
+  - Check user.tier for Pro-only features, return upgrade_url in 403 response
+---
+
+## Iteration 19 - US-019: Share Report Endpoints
+- What was implemented:
+  - POST /api/analyses/:id/share - generates secure 64-char hex token + public URL
+  - Returns existing active token if one exists, or creates new one
+  - DELETE /api/analyses/:id/share - revokes all active share tokens for an analysis
+  - GET /shared/reports/:token - public read-only endpoint for viewing shared reports
+  - Watermark indicator based on owner's tier (FREE = watermarked, PRO = clean)
+  - 410 Gone response for revoked tokens
+  - Both POST and DELETE require authentication and ownership verification
+  - GET /shared/reports/:token is public (no auth required)
+- Files changed:
+  - app/src/app/api/analyses/[id]/share/route.ts (new) - POST and DELETE endpoints
+  - app/src/app/shared/reports/[token]/route.ts (new) - Public report view endpoint
+- Learnings for future iterations:
+  - Use crypto.randomBytes(32).toString("hex") for secure token generation (64 hex chars)
+  - Return existing active token on POST rather than creating duplicates
+  - Use z.string().length(64).regex(/^[a-f0-9]+$/) for hex token validation
+  - 410 Gone is appropriate for revoked resources (vs 404 for not found)
+  - Shared report includes is_watermarked flag for frontend to render watermark
+---
+
+## Iteration 20 - US-020: App Shell - Layout, Header, Sidebar
+- What was implemented:
+  - Collapsible sidebar component with navigation items (Dashboard, Projects, Folders, Supported Codes, Settings)
+  - Header component with tier badge (FREE grey / PRO blue), avatar menu with user info, upgrade link, admin link (if admin), and sign out
+  - AppLayout component that wraps sidebar + header, manages collapsed state via localStorage
+  - Authenticated route group layout that fetches user data from database via Logto session
+  - Active route highlighting, auto-collapse on narrow screens via media query
+  - All styled with Tailwind CSS
+- Files changed:
+  - app/src/components/layout/Sidebar.tsx (new) - Collapsible sidebar with navigation
+  - app/src/components/layout/Header.tsx (new) - Header with tier badge and avatar menu
+  - app/src/components/layout/AppLayout.tsx (new) - Main layout wrapper with state management
+  - app/src/components/layout/index.ts (new) - Component exports
+  - app/src/app/(authenticated)/layout.tsx (new) - Server component that fetches user and wraps with AppLayout
+  - app/src/app/(authenticated)/page.tsx (new) - Placeholder dashboard page
+  - app/src/app/page.tsx (removed) - Root page removed, (authenticated) handles /
+  - app/src/app/layout.tsx (modified) - Updated metadata
+  - app/src/app/api/projects/[id]/analyses/route.ts (modified) - Fixed route param name from pid to id
+- Learnings for future iterations:
+  - Next.js App Router route groups (parentheses) share layouts but don't affect URL path
+  - Use useState + useEffect + localStorage pattern for persisting sidebar state
+  - Match dynamic route param names across nested routes (e.g., [id] everywhere, not mixed [id] and [pid])
+  - Use mock NextRequest for server components that need Logto context
+  - Client components need "use client" directive and mounted check to avoid hydration mismatch
+---

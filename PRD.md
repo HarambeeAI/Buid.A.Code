@@ -456,13 +456,13 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a user, I want consistent navigation.
 
 **Acceptance Criteria:**
-- [ ] Collapsible sidebar + header
-- [ ] Header: logo, tier badge (FREE grey / PRO blue), avatar menu
-- [ ] Sidebar: Dashboard, Projects, Folders, Supported Codes, Settings
-- [ ] Collapses on narrow screens, active route highlighted
-- [ ] Tailwind CSS
-- [ ] Typecheck passes
-- [ ] Verify changes work in browser
+- [x] Collapsible sidebar + header
+- [x] Header: logo, tier badge (FREE grey / PRO blue), avatar menu
+- [x] Sidebar: Dashboard, Projects, Folders, Supported Codes, Settings
+- [x] Collapses on narrow screens, active route highlighted
+- [x] Tailwind CSS
+- [x] Typecheck passes
+- [x] Verify changes work in browser
 
 ### US-021: Dashboard
 **Description:** As a user, I want activity feed and tier status.

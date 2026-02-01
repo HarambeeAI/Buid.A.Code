@@ -71,11 +71,11 @@ async function generateUniqueReportRef(): Promise<string> {
 }
 
 type RouteContext = {
-  params: Promise<{ pid: string }>;
+  params: Promise<{ id: string }>;
 };
 
 /**
- * POST /api/projects/:pid/analyses
+ * POST /api/projects/:id/analyses
  * Creates a new analysis for the authenticated user with tier validation.
  */
 export async function POST(request: NextRequest, context: RouteContext) {
@@ -85,7 +85,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
   }
 
   try {
-    const { pid: projectId } = await context.params;
+    const { id: projectId } = await context.params;
 
     // Validate UUID format
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -269,7 +269,7 @@ const ListAnalysesSchema = z.object({
 });
 
 /**
- * GET /api/projects/:pid/analyses
+ * GET /api/projects/:id/analyses
  * Lists analyses for a project.
  */
 export async function GET(request: NextRequest, context: RouteContext) {
@@ -279,7 +279,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
   }
 
   try {
-    const { pid: projectId } = await context.params;
+    const { id: projectId } = await context.params;
 
     // Validate UUID format
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
