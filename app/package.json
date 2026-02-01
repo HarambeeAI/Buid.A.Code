@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "db:seed": "npx tsx prisma/seed.ts"
+    "db:seed": "npx tsx prisma/seed.ts",
+    "worker": "npx tsx src/worker/analysis-worker.ts",
+    "worker:dev": "npx tsx watch src/worker/analysis-worker.ts"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"
@@ -17,6 +19,8 @@
     "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.3.0",
     "@react-pdf/renderer": "^4.3.2",
+    "bullmq": "^5.52.1",
+    "ioredis": "^5.6.1",
     "jose": "^6.1.3",
     "next": "16.1.6",
     "pg": "^8.18.0",

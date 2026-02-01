@@ -671,3 +671,54 @@
   - When implementing complex UI features, check if multiple user stories can be satisfied together
   - QuickNav pattern: search + filter state, computed filteredFindings, scrollToFinding/scrollToCategory helpers
 ---
+
+## Iteration 33 - US-032: Original Plan Viewer
+- What was implemented:
+  - DocumentViewer component using react-pdf for PDF rendering
+  - Image viewer support for PNG/JPG/TIFF documents with scale transform
+  - Page navigation: previous/next buttons, direct page input, keyboard arrows
+  - Zoom controls: zoom in (+25%), zoom out (-25%), reset (0), keyboard shortcuts (+/-)
+  - "View Page" links in FindingCard that switch to Plan view and navigate to specific page
+  - Replaced Plan view placeholder with functional document viewer
+  - PDF.js worker configured via unpkg CDN
+  - Keyboard shortcuts hint bar at bottom of viewer
+  - Download button for fallback access to document
+- Files changed:
+  - app/src/components/viewer/DocumentViewer.tsx (new) - Main viewer component
+  - app/src/components/viewer/index.ts (new) - Component exports
+  - app/src/app/(authenticated)/projects/[id]/analyses/[analysisId]/report/page.tsx (modified) - Integrated viewer, added "View Page" links
+  - app/package.json (modified) - Added react-pdf dependency
+- Learnings for future iterations:
+  - react-pdf v9 CSS imports are at `react-pdf/dist/Page/` not `react-pdf/dist/esm/Page/`
+  - PDF.js worker can be loaded from CDN: `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
+  - Use viewerPage state + callback pattern to allow findings to navigate the document viewer
+  - For images, use CSS transform scale() instead of width/height for smoother zooming
+  - Build errors about dynamic server usage during static generation are expected for auth pages
+---
+
+## Iteration 34 - US-033: Worker Setup - BullMQ Consumer
+- What was implemented:
+  - Redis connection utility in src/lib/redis.ts with BullMQ-compatible settings (maxRetriesPerRequest: null)
+  - BullMQ queue configuration in src/lib/queue.ts with ANALYSIS_QUEUE_NAME and enqueueAnalysis helper
+  - Analysis worker in src/worker/analysis-worker.ts that listens on 'analysis-processing' queue
+  - Worker sets analysis status to CLASSIFYING and started_at on job start
+  - Retry policy: 3 attempts with custom backoff (30s/60s/120s)
+  - On failure after all retries, marks analysis as FAILED with error message
+  - Graceful shutdown handling for SIGTERM/SIGINT
+  - Added REDIS_URL to .env.example
+  - Added bullmq and ioredis dependencies
+  - Added npm scripts: "worker" and "worker:dev" for running the worker
+- Files changed:
+  - app/src/lib/redis.ts (new) - Redis connection utility
+  - app/src/lib/queue.ts (new) - BullMQ queue configuration
+  - app/src/worker/analysis-worker.ts (new) - Worker processor
+  - app/.env.example (modified) - Added REDIS_URL
+  - app/package.json (modified) - Added dependencies and scripts
+- Learnings for future iterations:
+  - BullMQ requires `maxRetriesPerRequest: null` on Redis connection for proper blocking operations
+  - Use `settings.backoffStrategy` callback for custom retry delays instead of built-in exponential
+  - Worker needs its own Redis connection instance (not shared with queue)
+  - For Prisma in worker context, create a dedicated client instance, not the shared singleton
+  - Worker graceful shutdown: close worker first, then Prisma disconnect
+  - Run worker with: `npm run worker` (production) or `npm run worker:dev` (development with watch)
+---

@@ -593,10 +593,10 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a developer, I need queue infrastructure.
 
 **Acceptance Criteria:**
-- [ ] Connects to Railway Redis, listens on 'analysis-processing'
-- [ ] On job: sets CLASSIFYING + started_at
-- [ ] On failure: FAILED, retries 3x (30s/60s/120s backoff), 10min timeout
-- [ ] Typecheck passes
+- [x] Connects to Railway Redis, listens on 'analysis-processing'
+- [x] On job: sets CLASSIFYING + started_at
+- [x] On failure: FAILED, retries 3x (30s/60s/120s backoff), 10min timeout
+- [x] Typecheck passes
 
 ### US-034: Pipeline - Document Normalisation
 **Description:** As a developer, I need file normalisation.
