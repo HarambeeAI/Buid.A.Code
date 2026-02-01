@@ -980,3 +980,32 @@
   - Bulk operations should use Prisma updateMany for efficiency
   - JSON editor pattern: stringify on load, parse on save with error handling
 ---
+
+## Iteration 45 - US-044: Admin - Publish Code
+- What was implemented:
+  - POST /api/admin/codes/:id/publish endpoint
+    - Validates at least one VERIFIED requirement exists before publishing
+    - Generates 768-dim embeddings for each requirement (hash-based placeholder for MVP)
+    - Uses raw SQL for pgvector embedding updates within transaction
+    - Sets all VERIFIED requirements to PUBLISHED status
+    - Sets BuildingCode status to ACTIVE with published_at and published_by
+  - PATCH /api/admin/codes/:id/deprecate endpoint
+    - Sets all PUBLISHED requirements to DEPRECATED
+    - Sets BuildingCode status to DEPRECATED
+  - Admin UI updates to /admin/codes/[id] page:
+    - Publish button (disabled if 0 verified requirements)
+    - Deprecate button (only shown for ACTIVE codes)
+    - Confirmation dialogs for both actions with explanatory text
+    - Visual status indicators for each code state
+- Files changed:
+  - app/src/app/api/admin/codes/[id]/publish/route.ts (new) - Publish endpoint
+  - app/src/app/api/admin/codes/[id]/deprecate/route.ts (new) - Deprecate endpoint
+  - app/src/app/admin/codes/[id]/page.tsx (modified) - Added publish/deprecate UI
+  - PRD.md (modified) - Marked US-044 complete
+- Learnings for future iterations:
+  - Use Prisma $executeRaw for pgvector operations: `embedding = ${array}::vector`
+  - Confirmation dialog pattern: show current state summary + explain consequences
+  - Button state depends on both code.status AND statusCounts for enable/disable logic
+  - Use $transaction for atomicity when updating code + requirements together
+  - 307 redirect for authenticated pages during curl test is expected behavior
+---

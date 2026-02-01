@@ -558,6 +558,12 @@ export default function AdminCodeDetailPage() {
   // Bulk verify state
   const [bulkVerifying, setBulkVerifying] = useState(false);
 
+  // Publish and deprecate state
+  const [publishing, setPublishing] = useState(false);
+  const [deprecating, setDeprecating] = useState(false);
+  const [showPublishConfirm, setShowPublishConfirm] = useState(false);
+  const [showDeprecateConfirm, setShowDeprecateConfirm] = useState(false);
+
   const fetchCode = useCallback(async () => {
     try {
       const response = await fetch(`/api/admin/codes/${codeId}`);
@@ -773,6 +779,60 @@ export default function AdminCodeDetailPage() {
     }
   };
 
+  const handlePublish = async () => {
+    setPublishing(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`/api/admin/codes/${codeId}/publish`, {
+        method: "POST",
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Failed to publish building code");
+      }
+
+      const data = await response.json();
+      alert(data.message);
+
+      await fetchCode();
+      await fetchRequirements();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Publish failed");
+    } finally {
+      setPublishing(false);
+      setShowPublishConfirm(false);
+    }
+  };
+
+  const handleDeprecate = async () => {
+    setDeprecating(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`/api/admin/codes/${codeId}/deprecate`, {
+        method: "PATCH",
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Failed to deprecate building code");
+      }
+
+      const data = await response.json();
+      alert(data.message);
+
+      await fetchCode();
+      await fetchRequirements();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Deprecate failed");
+    } finally {
+      setDeprecating(false);
+      setShowDeprecateConfirm(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto">
@@ -839,6 +899,81 @@ export default function AdminCodeDetailPage() {
             </p>
             {code.description && (
               <p className="text-gray-500 text-sm mt-2">{code.description}</p>
+            )}
+          </div>
+
+          {/* Publish / Deprecate Buttons */}
+          <div className="flex items-center gap-3">
+            {code.status === "DRAFT" && statusCounts && statusCounts.verified > 0 && (
+              <button
+                onClick={() => setShowPublishConfirm(true)}
+                disabled={publishing}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+              >
+                {publishing ? (
+                  <>
+                    <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    Publishing...
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Publish Code
+                  </>
+                )}
+              </button>
+            )}
+
+            {code.status === "DRAFT" && statusCounts && statusCounts.verified === 0 && (
+              <button
+                disabled
+                className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-400 rounded-lg cursor-not-allowed"
+                title="Verify at least one requirement before publishing"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                Publish Code
+              </button>
+            )}
+
+            {code.status === "ACTIVE" && (
+              <button
+                onClick={() => setShowDeprecateConfirm(true)}
+                disabled={deprecating}
+                className="inline-flex items-center gap-2 px-4 py-2 border border-orange-300 text-orange-600 rounded-lg hover:bg-orange-50 transition-colors disabled:opacity-50"
+              >
+                {deprecating ? (
+                  <>
+                    <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    Deprecating...
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                    </svg>
+                    Deprecate
+                  </>
+                )}
+              </button>
+            )}
+
+            {code.status === "DEPRECATED" && (
+              <span className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-500 rounded-lg">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                Deprecated
+              </span>
             )}
           </div>
         </div>
@@ -1176,6 +1311,140 @@ export default function AdminCodeDetailPage() {
           onDelete={handleDeleteRequirement}
           onVerify={handleVerifyRequirement}
         />
+      )}
+
+      {/* Publish Confirmation Dialog */}
+      {showPublishConfirm && (
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={(e) => e.target === e.currentTarget && setShowPublishConfirm(false)}
+        >
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">Publish Building Code</h3>
+                <p className="text-sm text-gray-500">This action will make the code available to users</p>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 rounded-lg p-4 mb-4">
+              <p className="text-sm text-gray-700 mb-2">
+                <strong>{code.name}</strong> ({code.code_id})
+              </p>
+              <p className="text-sm text-gray-600">
+                {statusCounts?.verified || 0} verified requirements will be published.
+              </p>
+            </div>
+
+            <p className="text-sm text-gray-600 mb-6">
+              Publishing will:
+            </p>
+            <ul className="text-sm text-gray-600 mb-6 list-disc list-inside space-y-1">
+              <li>Generate embeddings for all verified requirements</li>
+              <li>Set all verified requirements to PUBLISHED status</li>
+              <li>Set the building code status to ACTIVE</li>
+              <li>Make the code available for compliance analysis</li>
+            </ul>
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowPublishConfirm(false)}
+                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handlePublish}
+                disabled={publishing}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+              >
+                {publishing ? (
+                  <>
+                    <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    Publishing...
+                  </>
+                ) : (
+                  "Yes, Publish"
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Deprecate Confirmation Dialog */}
+      {showDeprecateConfirm && (
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={(e) => e.target === e.currentTarget && setShowDeprecateConfirm(false)}
+        >
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">Deprecate Building Code</h3>
+                <p className="text-sm text-gray-500">This will mark the code as outdated</p>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 rounded-lg p-4 mb-4">
+              <p className="text-sm text-gray-700 mb-2">
+                <strong>{code.name}</strong> ({code.code_id})
+              </p>
+              <p className="text-sm text-gray-600">
+                Version {code.version} • {statusCounts?.published || 0} published requirements
+              </p>
+            </div>
+
+            <p className="text-sm text-gray-600 mb-6">
+              Deprecating will:
+            </p>
+            <ul className="text-sm text-gray-600 mb-6 list-disc list-inside space-y-1">
+              <li>Set all PUBLISHED requirements to DEPRECATED</li>
+              <li>Set the building code status to DEPRECATED</li>
+              <li>Remove it from active code selection for new analyses</li>
+              <li>Existing analyses using this code will not be affected</li>
+            </ul>
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowDeprecateConfirm(false)}
+                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeprecate}
+                disabled={deprecating}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors disabled:opacity-50"
+              >
+                {deprecating ? (
+                  <>
+                    <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    Deprecating...
+                  </>
+                ) : (
+                  "Yes, Deprecate"
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

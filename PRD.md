@@ -700,11 +700,11 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As an admin, I want to publish verified codes.
 
 **Acceptance Criteria:**
-- [ ] Publish button (disabled if 0 verified), confirmation dialog
-- [ ] Generates embeddings, sets PUBLISHED/ACTIVE, records published_at/by
-- [ ] Deprecate button for old versions
-- [ ] Typecheck passes
-- [ ] Verify changes work in browser
+- [x] Publish button (disabled if 0 verified), confirmation dialog
+- [x] Generates embeddings, sets PUBLISHED/ACTIVE, records published_at/by
+- [x] Deprecate button for old versions
+- [x] Typecheck passes
+- [x] Verify changes work in browser
 
 ### US-045: Admin - Code Request Triage
 **Description:** As an admin, I want to manage user requests.
