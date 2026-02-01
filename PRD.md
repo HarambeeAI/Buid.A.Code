@@ -749,10 +749,10 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a power user, I want shortcuts.
 
 **Acceptance Criteria:**
-- [ ] N/search/F/E/? shortcuts, only when no input focused
-- [ ] ? overlay
-- [ ] Typecheck passes
-- [ ] Verify changes work in browser
+- [x] N/search/F/E/? shortcuts, only when no input focused
+- [x] ? overlay
+- [x] Typecheck passes
+- [x] Verify changes work in browser
 
 ---
 

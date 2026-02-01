@@ -1112,3 +1112,30 @@
   - Folder filter uses different query param name (folder) than API param name (folder_id)
   - Projects page fetches folder name separately to display in header
 ---
+
+## Iteration 50 - US-049: Keyboard Shortcuts
+- What was implemented:
+  - useKeyboardShortcuts hook in src/hooks/useKeyboardShortcuts.ts
+  - Shortcuts: N (new analysis), / (search), F (filter), E (export), ? (help overlay)
+  - Shortcuts only active when no input is focused (checks input/textarea/select/contentEditable)
+  - Ignores shortcuts when modifier keys (Ctrl/Meta/Alt) are pressed (except ? needs Shift)
+  - KeyboardShortcutsOverlay component with modal showing all shortcuts
+  - Styled with kbd elements showing key labels
+  - Escape key closes the overlay
+  - Click-outside-to-close on backdrop
+  - Integrated into AppLayout for global availability
+  - KEYBOARD_SHORTCUTS array exported for overlay to display
+- Files changed:
+  - app/src/hooks/useKeyboardShortcuts.ts (new) - Keyboard shortcuts hook
+  - app/src/hooks/index.ts (new) - Hooks export
+  - app/src/components/keyboard/KeyboardShortcutsOverlay.tsx (new) - Help overlay modal
+  - app/src/components/keyboard/index.ts (new) - Component exports
+  - app/src/components/layout/AppLayout.tsx (modified) - Integrated shortcuts and overlay
+  - PRD.md (modified) - Marked US-049 complete
+- Learnings for future iterations:
+  - Use document.activeElement.tagName and isContentEditable to detect input focus
+  - event.preventDefault() needed for / key to prevent browser's quick find
+  - Keyboard event handler pattern: useCallback + useEffect for mount/unmount
+  - kbd element styling: px-2 py-1 font-mono bg-gray-100 rounded border for nice keyboard key appearance
+  - Global shortcuts belong in AppLayout for consistent availability across all authenticated pages
+---

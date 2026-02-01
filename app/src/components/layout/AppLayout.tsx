@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
+import { KeyboardShortcutsOverlay } from "@/components/keyboard";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 
 type User = {
   id: string;
@@ -23,6 +25,12 @@ const SIDEBAR_COLLAPSED_KEY = "sidebar_collapsed";
 export function AppLayout({ children, user }: AppLayoutProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [showHelpOverlay, setShowHelpOverlay] = useState(false);
+
+  // Initialize keyboard shortcuts
+  useKeyboardShortcuts({
+    onOpenHelpOverlay: () => setShowHelpOverlay(true),
+  });
 
   // Load saved sidebar state from localStorage
   useEffect(() => {
@@ -84,6 +92,12 @@ export function AppLayout({ children, user }: AppLayoutProps) {
       >
         <div className="p-6">{children}</div>
       </main>
+
+      {/* Keyboard shortcuts help overlay */}
+      <KeyboardShortcutsOverlay
+        isOpen={showHelpOverlay}
+        onClose={() => setShowHelpOverlay(false)}
+      />
     </div>
   );
 }
