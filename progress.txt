@@ -463,3 +463,52 @@
   - Backdrop blur with bg-black/50 backdrop-blur-sm for nice modal overlay
   - Click on backdrop (e.target === e.currentTarget) to close modal
 ---
+
+## Iteration 24 - US-024: Project Detail - Analysis History
+- What was implemented:
+  - Project detail page at /projects/:id with project name, description, folder info
+  - Analysis table with columns: Document (type icon + name), Report Ref, Status, Result, Score, Date, Actions
+  - Document type icons: PDF (red), PNG/JPG/TIFF (purple), DXF/IFC (blue)
+  - Status badges with spinner animation for processing states
+  - Overall status (PASS/CONDITIONAL/FAIL) badges with color coding
+  - Compliance score with color coding (green >= 90%, amber >= 70%, red < 70%)
+  - Row actions: View report, Share, Delete with hover visibility
+  - Row click navigation to report (if completed) or processing page (if in progress)
+  - Empty state with CTA to create first analysis
+  - New Analysis button navigating to wizard (/projects/:id/analyses/new)
+  - Edit project button opening ProjectModal
+  - Breadcrumb navigation (Projects > Project Name)
+  - Pagination for analyses list
+  - Loading skeleton and error states
+- Files changed:
+  - app/src/app/(authenticated)/projects/[id]/page.tsx (new) - Project detail page
+  - PRD.md (modified) - Marked US-024 complete
+- Learnings for future iterations:
+  - ProjectModal expects minimal Project type (id, name, description, folder_id) - don't pass extra fields
+  - Dynamic route pages at /projects/[id] use useParams() hook to get the ID
+  - e.stopPropagation() needed on action buttons when row is clickable
+  - Table with overflow-x-auto for responsive horizontal scrolling
+---
+
+## Iteration 25 - US-025: Wizard Step 1 - Upload + Details
+- What was implemented:
+  - Full-screen wizard layout at /projects/:id/analyses/new
+  - Drag-drop file upload zone accepting PDF, PNG, JPG, JPEG, TIF, TIFF
+  - File preview showing filename, size, document type icon, and page count
+  - Progress bar during upload (presigned URL → S3 upload → confirm)
+  - Tier-based validation: FREE <= 5 pages, 10MB; PRO <= 50 pages, 100MB
+  - Page limit exceeded warning with upgrade CTA for FREE tier
+  - Tier info sidebar showing current limits and remaining analyses
+  - Optional description textarea and page numbers input field
+  - Step indicators (1, 2, 3) in header showing current progress
+  - Next button disabled until file uploaded and within tier limits
+  - Wizard data stored in sessionStorage for next step
+- Files changed:
+  - app/src/app/(authenticated)/projects/[id]/analyses/new/page.tsx (new) - Wizard Step 1
+  - PRD.md (modified) - Marked US-025 criteria complete
+- Learnings for future iterations:
+  - Use sessionStorage to pass wizard data between steps (File objects can't be serialized)
+  - TypeScript requires explicit boolean conversion when using && chains that might return null
+  - Component pattern: DropZone for initial state, FilePreview for after selection
+  - Upload flow: presigned-url → PUT to S3 → confirm (3 API calls)
+---

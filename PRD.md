@@ -507,13 +507,13 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a user, I want to upload and provide context.
 
 **Acceptance Criteria:**
-- [ ] Full-screen wizard, drag-drop (.pdf/.png/.jpg/.jpeg/.tif/.tiff)
-- [ ] Preview, filename, size, page count on select
-- [ ] Tier check: > 5 pages (free) shows upgrade CTA, disables Next
-- [ ] Optional description + page numbers
-- [ ] Tier info display, Next disabled until file valid
-- [ ] Presigned URL upload
-- [ ] Typecheck passes
+- [x] Full-screen wizard, drag-drop (.pdf/.png/.jpg/.jpeg/.tif/.tiff)
+- [x] Preview, filename, size, page count on select
+- [x] Tier check: > 5 pages (free) shows upgrade CTA, disables Next
+- [x] Optional description + page numbers
+- [x] Tier info display, Next disabled until file valid
+- [x] Presigned URL upload
+- [x] Typecheck passes
 - [ ] Verify changes work in browser
 
 ### US-026: Wizard Step 2 - Region + Codes
