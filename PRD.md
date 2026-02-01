@@ -325,10 +325,10 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a developer, I need seed data for launch codes.
 
 **Acceptance Criteria:**
-- [ ] Seed BuildingCode: AU (5 codes), UK (1), US (2) - all ACTIVE
-- [ ] Seed 10+ CodeRequirement records for IRC 2021 across categories with complete fields including extraction_guidance and evaluation_guidance, status PUBLISHED
-- [ ] Seed runs without errors
-- [ ] Typecheck passes
+- [x] Seed BuildingCode: AU (5 codes), UK (1), US (2) - all ACTIVE
+- [x] Seed 10+ CodeRequirement records for IRC 2021 across categories with complete fields including extraction_guidance and evaluation_guidance, status PUBLISHED
+- [x] Seed runs without errors
+- [x] Typecheck passes
 
 ### US-007: Logto Auth - Login / Callback / Logout
 **Description:** As a user, I want to sign in via Logto.

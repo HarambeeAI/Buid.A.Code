@@ -99,3 +99,22 @@
   - When adding FK relations with nullable references, use SetNull on delete behavior
   - Remember to add reverse relations on all referenced models (User.codeRequests, Analysis.shareTokens, BuildingCode.resolvedCodeRequests)
 ---
+
+## Iteration 6 - US-006: Seed Data - Building Codes and Sample Requirements
+- What was implemented:
+  - Created prisma/seed.ts with complete seed data
+  - 8 BuildingCode records: AU (5: NCC-2022, AS-SI-01, AS-SI-02, AS-SI-03, AS-BP-01), UK (1: UK-BR-2010), US (2: IRC-2021, IBC-2021) - all ACTIVE status
+  - 12 CodeRequirement records for IRC 2021 across categories (STRUCTURAL, FIRE_SAFETY, EGRESS, ACCESSIBILITY, ENERGY, GENERAL_BUILDING, PLUMBING) - all PUBLISHED status
+  - Each CodeRequirement has complete fields including extraction_guidance and evaluation_guidance
+  - Uses upsert to handle re-running the seed safely
+  - Added tsx dev dependency for running TypeScript seeds
+  - Added prisma.seed configuration to package.json
+- Files changed:
+  - app/prisma/seed.ts (new)
+  - app/package.json (modified - added seed script and tsx dependency)
+- Learnings for future iterations:
+  - Use upsert with stable UUIDs for deterministic seeding
+  - Prisma seed config goes in package.json under "prisma": { "seed": "..." }
+  - tsx is needed to run TypeScript seeds: `npx tsx prisma/seed.ts`
+  - Run with `npx prisma db seed` or `npm run db:seed`
+---
