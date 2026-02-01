@@ -611,10 +611,10 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a developer, I need page type detection.
 
 **Acceptance Criteria:**
-- [ ] Each page to Gemini with classification prompt
-- [ ] Returns page_type, description, scale_detected
-- [ ] Updates current_stage
-- [ ] Typecheck passes
+- [x] Each page to Gemini with classification prompt
+- [x] Returns page_type, description, scale_detected
+- [x] Updates current_stage
+- [x] Typecheck passes
 
 ### US-036: Pipeline - Matrix Analysis
 **Description:** As a developer, I need the core code x page analysis loop.

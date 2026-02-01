@@ -748,3 +748,31 @@
   - AWS Signature V4 for PUT requires content-sha256 header with hash of body
   - Store page images with zero-padded page numbers (page-0001.png) for proper sorting
 ---
+
+## Iteration 36 - US-035: Pipeline - Page Classification
+- What was implemented:
+  - Gemini client utility in src/lib/gemini.ts with vision model configuration
+  - Page classification pipeline in src/pipeline/page-classification.ts
+  - Classification sends each normalised page image to Gemini 2.5 Flash Preview
+  - Returns page_type (floor_plan/elevation/section/site_plan/detail/schedule/title_block/other), description, scale_detected
+  - Updates current_stage during classification (e.g., "Classifying page 3 of 10")
+  - Integrated classification step into worker after document normalisation
+  - JSON parsing handles Gemini markdown code blocks with cleanup
+  - Classification failures gracefully default to "other" type
+  - Added GEMINI_API_KEY and VISION_MODEL to .env.example
+  - Added @google/generative-ai dependency
+- Files changed:
+  - app/src/lib/gemini.ts (new) - Gemini AI client utility
+  - app/src/pipeline/page-classification.ts (new) - Page classification pipeline
+  - app/src/worker/analysis-worker.ts (modified) - Integrated classification step
+  - app/.env.example (modified) - Added Gemini env vars
+  - app/package.json (modified) - Added @google/generative-ai dependency
+- Learnings for future iterations:
+  - Use @google/generative-ai SDK for Gemini API access
+  - getGenerativeModel() returns model instance, generateContent() takes parts array
+  - bufferToImagePart() converts Buffer to base64 inline data format
+  - Gemini may wrap JSON response in ```json ... ``` blocks - need to clean before parsing
+  - Lower temperature (0.2) gives more consistent classification results
+  - Classification prompt should include explicit page type definitions for accuracy
+  - Graceful degradation: default to "other" type if classification fails
+---

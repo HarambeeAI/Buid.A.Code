@@ -6,6 +6,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 import { ANALYSIS_QUEUE_NAME, AnalysisJobData } from "../lib/queue";
 import { normaliseDocument, NormalisationResult } from "../pipeline/document-normalisation";
+import { classifyPages } from "../pipeline/page-classification";
 
 // Custom backoff delays in milliseconds (30s, 60s, 120s)
 const BACKOFF_DELAYS = [30000, 60000, 120000];
@@ -95,9 +96,18 @@ async function processAnalysisJob(job: Job<AnalysisJobData>): Promise<void> {
     });
   }
 
-  // TODO: Implement remaining pipeline stages in future user stories (US-035 to US-038)
+  // Stage 2: Page Classification (US-035)
+  console.log(`[Worker] Starting page classification for ${analysisId}`);
+  const classificationResult = await classifyPages(
+    prisma,
+    analysisId,
+    normalisationResult.pages
+  );
+
+  console.log(`[Worker] Classification complete: ${classificationResult.totalPages} pages classified`);
+
+  // TODO: Implement remaining pipeline stages in future user stories (US-036 to US-038)
   // The pipeline stages will be:
-  // 2. Page Classification (US-035) - classify each page type
   // 3. Matrix Analysis (US-036) - code x page analysis
   // 4. Cross-Validation + Scoring (US-037) - validate and score
   // 5. Recommendations + Completion (US-038) - generate recommendations
