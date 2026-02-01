@@ -211,3 +211,24 @@
   - Use Prisma $transaction for operations that need atomicity (e.g., update projects then delete folder)
   - Folder delete uses SetNull behavior defined in schema, but explicit updateMany + delete in transaction is safer for clarity
 ---
+
+## Iteration 12 - US-012: Analysis Creation with Tier Validation
+- What was implemented:
+  - POST /api/projects/:pid/analyses - creates analysis with tier-based validation
+  - GET /api/projects/:pid/analyses - lists analyses for a project with pagination
+  - Generates unique report_ref in BAC-YYYY-NNNNN format (timestamp + random for uniqueness)
+  - FREE tier validation: page_count <= 5, codes <= 3, analyses_remaining > 0
+  - FREE tier: decrements analyses_remaining on successful creation using transaction
+  - PRO tier validation: page_count <= 50, no code limit
+  - Returns 403 with specific error codes (PAGE_LIMIT_EXCEEDED, CODE_LIMIT_EXCEEDED, ANALYSES_EXHAUSTED)
+  - Sets status=PENDING on creation
+  - All endpoints require authentication and project ownership verification
+  - Zod validation for all inputs
+- Files changed:
+  - app/src/app/api/projects/[pid]/analyses/route.ts (new) - POST and GET endpoints
+- Learnings for future iterations:
+  - Use $transaction for operations that need atomicity (decrement remaining + create analysis)
+  - Report ref generation should handle collisions with retry + fallback to UUID approach
+  - Return specific error codes in 403 responses to help UI display appropriate upgrade CTAs
+  - Next.js 15+ uses [pid] pattern for nested dynamic routes
+---

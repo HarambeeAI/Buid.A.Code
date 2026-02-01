@@ -383,13 +383,13 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a user, I want to create analyses respecting tier limits.
 
 **Acceptance Criteria:**
-- [ ] POST accepts document fields, region, selected_codes
-- [ ] Generates BAC-YYYY-NNNNN report_ref
-- [ ] FREE: page_count <= 5, codes <= 3, analyses_remaining > 0, decrements remaining
-- [ ] PRO: page_count <= 50, no code limit
-- [ ] 403 with specific message if limit exceeded
-- [ ] Sets status=PENDING
-- [ ] Typecheck passes
+- [x] POST accepts document fields, region, selected_codes
+- [x] Generates BAC-YYYY-NNNNN report_ref
+- [x] FREE: page_count <= 5, codes <= 3, analyses_remaining > 0, decrements remaining
+- [x] PRO: page_count <= 50, no code limit
+- [x] 403 with specific message if limit exceeded
+- [x] Sets status=PENDING
+- [x] Typecheck passes
 
 ### US-013: Analysis Read and Delete
 **Description:** As a user, I want to view and manage analyses.
