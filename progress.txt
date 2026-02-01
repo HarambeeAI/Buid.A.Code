@@ -799,3 +799,48 @@
   - Graceful error handling: return NOT_ASSESSED on failure rather than throwing
   - JSON prompt structure should include explicit field definitions and example responses
 ---
+
+## Iteration 38 - US-037: Pipeline - Cross-Validation + Scoring
+- What was implemented:
+  - Cross-validation and scoring pipeline in src/pipeline/cross-validation.ts
+  - Cross-page comparison: detects conflicts when same requirement assessed on multiple pages with different statuses
+  - Deduplication: keeps highest confidence result per requirement (HIGH > MEDIUM > LOW), with most severe status as tiebreaker
+  - Score calculation: COMPLIANT / (COMPLIANT + WARNING + CRITICAL) × 100 (NOT_ASSESSED excluded)
+  - Overall status assignment: PASS (>= 90% and 0 critical), FAIL (< 70%), CONDITIONAL (everything else)
+  - Populates Analysis count fields: critical_count, warning_count, compliant_count, not_assessed_count, total_checks
+  - Updates compliance_score and overall_status in database
+  - Integrated into analysis-worker.ts after matrix analysis step
+  - Sets status to VALIDATING during cross-validation phase
+- Files changed:
+  - app/src/pipeline/cross-validation.ts (new) - Cross-validation and scoring pipeline
+  - app/src/worker/analysis-worker.ts (modified) - Integrated cross-validation step
+  - PRD.md (modified) - Marked US-037 complete
+- Learnings for future iterations:
+  - Group results by requirementId first to find duplicates across pages
+  - Conflict detection: only flag when assessed results (excluding NOT_ASSESSED) have different statuses
+  - Deduplication priority: confidence first, then status severity, then page number
+  - Score formula excludes NOT_ASSESSED from both numerator and denominator
+  - PASS requires both high score (>= 90%) AND zero critical findings
+---
+
+## Iteration 39 - US-038: Pipeline - Recommendations + Completion
+- What was implemented:
+  - Verified recommendations.ts was already implemented with all acceptance criteria
+  - Non-compliant findings sent to Gemini for coordinated recommendations via generateCoordinatedRecommendations()
+  - Findings sorted by status (Critical first) then category using CATEGORY_ORDER and STATUS_ORDER maps
+  - Findings saved to database with sort_order via createMany() batch insert
+  - Analysis marked COMPLETED with completed_at timestamp via completeAnalysis()
+  - Integrated into analysis-worker.ts as final pipeline stage after cross-validation
+  - TypeScript typecheck passes
+  - Next.js build passes
+- Files changed:
+  - app/src/pipeline/recommendations.ts (verified - already complete)
+  - PRD.md (modified - marked US-038 complete)
+  - progress.txt (modified - added this iteration)
+- Learnings for future iterations:
+  - Some user stories may have been implemented ahead of schedule during pipeline work
+  - Always verify existing files before implementing - the import in worker already existed
+  - Recommendation prompt includes related findings for coordinated fixes
+  - Sorting: Critical -> Warning -> Not Assessed -> Compliant, then by category order
+  - Use createMany() for batch inserting findings with sort_order index
+---

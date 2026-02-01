@@ -9,6 +9,7 @@ import { normaliseDocument, NormalisationResult } from "../pipeline/document-nor
 import { classifyPages } from "../pipeline/page-classification";
 import { runMatrixAnalysis } from "../pipeline/matrix-analysis";
 import { runCrossValidation } from "../pipeline/cross-validation";
+import { runRecommendationsAndCompletion } from "../pipeline/recommendations";
 
 // Custom backoff delays in milliseconds (30s, 60s, 120s)
 const BACKOFF_DELAYS = [30000, 60000, 120000];
@@ -132,9 +133,16 @@ async function processAnalysisJob(job: Job<AnalysisJobData>): Promise<void> {
   console.log(`[Worker] Conflicts detected: ${validationResult.conflicts.length}`);
   console.log(`[Worker] Final counts - Critical: ${validationResult.statusCounts.critical}, Warning: ${validationResult.statusCounts.warning}, Compliant: ${validationResult.statusCounts.compliant}, Not Assessed: ${validationResult.statusCounts.notAssessed}`);
 
-  // TODO: Implement remaining pipeline stages in future user stories (US-038)
-  // The pipeline stages will be:
-  // 5. Recommendations + Completion (US-038) - generate recommendations and save findings
+  // Stage 5: Recommendations + Completion (US-038)
+  console.log(`[Worker] Starting recommendations generation for ${analysisId}`);
+  const recommendationsResult = await runRecommendationsAndCompletion(
+    prisma,
+    analysisId,
+    validationResult
+  );
+
+  console.log(`[Worker] Recommendations complete: ${recommendationsResult.totalFindings} findings saved, ${recommendationsResult.recommendationsGenerated} recommendations generated`);
+  console.log(`[Worker] Analysis ${analysisId} COMPLETED successfully`);
 }
 
 // Create the worker

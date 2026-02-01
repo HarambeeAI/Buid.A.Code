@@ -642,10 +642,10 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a developer, I need final recommendations and save.
 
 **Acceptance Criteria:**
-- [ ] Non-compliant findings to Gemini for coordinated recommendations
-- [ ] Category assignment, sort_order (Critical first, by category)
-- [ ] Save all Findings, set COMPLETED + completed_at
-- [ ] Typecheck passes
+- [x] Non-compliant findings to Gemini for coordinated recommendations
+- [x] Category assignment, sort_order (Critical first, by category)
+- [x] Save all Findings, set COMPLETED + completed_at
+- [x] Typecheck passes
 
 ### US-039: Analysis Creation - Queue Dispatch
 **Description:** As a developer, I need job dispatch on analysis creation.
