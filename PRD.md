@@ -720,11 +720,11 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a user, I want to request missing codes.
 
 **Acceptance Criteria:**
-- [ ] Accessible from wizard Step 2 and /codes page
-- [ ] Modal: Code Name, Region, Description, Reference URL
-- [ ] Success confirmation message
-- [ ] Typecheck passes
-- [ ] Verify changes work in browser
+- [x] Accessible from wizard Step 2 and /codes page
+- [x] Modal: Code Name, Region, Description, Reference URL
+- [x] Success confirmation message
+- [x] Typecheck passes
+- [x] Verify changes work in browser
 
 ### US-047: Supported Codes Page + My Requests
 **Description:** As a user, I want to browse codes and track requests.
