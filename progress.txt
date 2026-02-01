@@ -142,3 +142,20 @@
   - Cookie handling is built into Logto SDK - uses httpOnly, Secure, SameSite=Lax
   - The `getLogtoContext()` method provides both auth status and claims in one call
 ---
+
+## Iteration 8 - US-008: Logto Webhook - User Sync
+- What was implemented:
+  - POST /api/webhooks/logto endpoint for handling Logto webhook events
+  - HMAC-SHA256 signature validation using `logto-signature-sha-256` header
+  - User.Created event handling: creates user with tier=FREE, analyses_remaining=2, role=USER
+  - Uses upsert to handle duplicate user creation gracefully (updates email/name if user exists)
+  - Added LOGTO_WEBHOOK_SIGNING_KEY to .env.example
+- Files changed:
+  - app/src/app/api/webhooks/logto/route.ts (new) - Webhook handler
+  - app/.env.example (modified) - Added LOGTO_WEBHOOK_SIGNING_KEY
+- Learnings for future iterations:
+  - Logto webhooks use `logto-signature-sha-256` header for HMAC signature
+  - Event names are PascalCase (e.g., "User.Created" not "user.created")
+  - Always use upsert for webhook handlers to handle duplicate deliveries
+  - Get raw body with `request.text()` before parsing JSON for signature verification
+---

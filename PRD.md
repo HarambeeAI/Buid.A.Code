@@ -344,11 +344,11 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a new user, I get an account with 2 free analyses on signup.
 
 **Acceptance Criteria:**
-- [ ] POST /api/webhooks/logto handles user.created
-- [ ] Validates signature header
-- [ ] Creates User: tier=FREE, analyses_remaining=2, role=USER
-- [ ] Handles duplicates gracefully
-- [ ] Typecheck passes
+- [x] POST /api/webhooks/logto handles user.created
+- [x] Validates signature header
+- [x] Creates User: tier=FREE, analyses_remaining=2, role=USER
+- [x] Handles duplicates gracefully
+- [x] Typecheck passes
 
 ### US-009: GET /api/auth/me
 **Description:** As a user, I want my profile and tier info.
