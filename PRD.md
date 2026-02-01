@@ -334,11 +334,11 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a user, I want to sign in via Logto.
 
 **Acceptance Criteria:**
-- [ ] GET /api/auth/login redirects to Logto OIDC
-- [ ] GET /api/auth/callback exchanges code, sets httpOnly/Secure/SameSite=Lax cookie
-- [ ] POST /api/auth/logout clears session
-- [ ] Protected routes return 401 without auth
-- [ ] Typecheck passes
+- [x] GET /api/auth/login redirects to Logto OIDC
+- [x] GET /api/auth/callback exchanges code, sets httpOnly/Secure/SameSite=Lax cookie
+- [x] POST /api/auth/logout clears session
+- [x] Protected routes return 401 without auth
+- [x] Typecheck passes
 
 ### US-008: Logto Webhook - User Sync
 **Description:** As a new user, I get an account with 2 free analyses on signup.

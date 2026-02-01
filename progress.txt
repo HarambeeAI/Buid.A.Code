@@ -118,3 +118,27 @@
   - tsx is needed to run TypeScript seeds: `npx tsx prisma/seed.ts`
   - Run with `npx prisma db seed` or `npm run db:seed`
 ---
+
+## Iteration 7 - US-007: Logto Auth - Login / Callback / Logout
+- What was implemented:
+  - Logto Next.js SDK integration using edge runtime for App Router compatibility
+  - GET /api/auth/login - redirects to Logto OIDC authorization endpoint
+  - GET /api/auth/callback - handles OAuth callback, exchanges code for tokens, sets session cookie
+  - POST /api/auth/logout - clears session and signs out user
+  - Auth utility functions: getSession(), requireAuth(), unauthorized(), forbidden()
+  - Logto client configuration via environment variables
+  - Updated .env.example with Logto environment variables
+- Files changed:
+  - app/src/lib/logto.ts (new) - Logto client configuration
+  - app/src/lib/auth.ts (new) - Auth helper functions
+  - app/src/app/api/auth/login/route.ts (new) - Login endpoint
+  - app/src/app/api/auth/callback/route.ts (new) - OAuth callback endpoint
+  - app/src/app/api/auth/logout/route.ts (new) - Logout endpoint
+  - app/.env.example (modified) - Added Logto env vars
+  - app/package.json (modified) - Added @logto/next and jose dependencies
+- Learnings for future iterations:
+  - Use `@logto/next/edge` import for App Router edge runtime compatibility
+  - Logto SDK v4.x has separate exports for Pages Router (default), Edge, and Server Actions
+  - Cookie handling is built into Logto SDK - uses httpOnly, Secure, SameSite=Lax
+  - The `getLogtoContext()` method provides both auth status and claims in one call
+---
