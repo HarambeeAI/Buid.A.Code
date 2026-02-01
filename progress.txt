@@ -528,3 +528,52 @@
   - Use curl to verify API endpoints work correctly without full browser testing
   - Page returning 200 confirms React components render without fatal errors
 ---
+
+## Iteration 27 - US-026: Wizard Step 2 - Region + Codes
+- What was implemented:
+  - Full-screen wizard step 2 at /projects/:id/analyses/new/step2
+  - Region selection with flag-adorned cards (AU, UK, US)
+  - Loads building codes via /api/regions/:region/codes when region selected
+  - Checkbox-style code cards with name, code_id, version, requirement count
+  - "Recommended" badges on top 2 codes by requirement count
+  - FREE tier: max 3 codes, extras show lock icon + "Pro" badge + upgrade tooltip
+  - Upgrade CTA when at code limit for FREE users
+  - "Don't see your code?" link opens CodeRequestModal
+  - CodeRequestModal: code name, region dropdown, description, reference URL
+  - Next button disabled until region + at least 1 code selected
+  - Back button preserves selections via sessionStorage
+  - Step indicators showing step 1 complete (green checkmark), step 2 active
+- Files changed:
+  - app/src/app/(authenticated)/projects/[id]/analyses/new/step2/page.tsx (new) - Wizard Step 2
+  - PRD.md (modified) - Marked US-026 complete
+- Learnings for future iterations:
+  - Wizard multi-step pattern: each step reads/writes sessionStorage with key `wizard_${projectId}`
+  - Use useCallback for API fetches that depend on state (selectedRegion → fetchCodes)
+  - Region change should clear code selections unless restoring from session
+  - CodeRequestModal pattern: success state with auto-close after delay
+  - "Recommended" badge logic: sort by requirement_count desc, take top N
+---
+
+## Iteration 28 - US-027: Wizard Step 3 - Review + Submit
+- What was implemented:
+  - Full-screen wizard step 3 at /projects/:id/analyses/new/step3
+  - Summary of all selections: document (type, page count, description), region with flag, selected codes with requirement counts
+  - Time estimate calculation based on requirements × pages
+  - Submit button with tier context ("X of 2 free remaining" for FREE users)
+  - Back button preserves data (already in sessionStorage)
+  - Submit calls POST /api/projects/:pid/analyses API
+  - Handles 403 errors with specific messages (PAGE_LIMIT_EXCEEDED, CODE_LIMIT_EXCEEDED, ANALYSES_EXHAUSTED)
+  - Upgrade CTA shown in error messages when limits exceeded
+  - Loading/submitting states with spinner animation
+  - Redirects to processing page on success (/projects/:id/analyses/:analysisId/processing)
+  - Clears wizard data from sessionStorage on successful submission
+  - Step indicators showing steps 1 and 2 complete (green checkmarks), step 3 active
+- Files changed:
+  - app/src/app/(authenticated)/projects/[id]/analyses/new/step3/page.tsx (new) - Wizard Step 3
+  - PRD.md (modified) - Marked US-027 complete
+- Learnings for future iterations:
+  - Wizard completion pattern: redirect to processing page, clear sessionStorage
+  - Handle 403 with specific error codes to show appropriate upgrade CTAs
+  - Processing time estimate: ~3 seconds per requirement-page pair (rough heuristic)
+  - SummarySection component pattern for grouped information display
+---

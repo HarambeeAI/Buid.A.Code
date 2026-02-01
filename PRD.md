@@ -532,11 +532,11 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a user, I want to review before submitting.
 
 **Acceptance Criteria:**
-- [ ] Summary of all selections, time estimate
-- [ ] Submit button with tier context ("X of 2 free remaining")
-- [ ] Back preserves, submit calls API, handles 403
-- [ ] Typecheck passes
-- [ ] Verify changes work in browser
+- [x] Summary of all selections, time estimate
+- [x] Submit button with tier context ("X of 2 free remaining")
+- [x] Back preserves, submit calls API, handles 403
+- [x] Typecheck passes
+- [x] Verify changes work in browser
 
 ### US-028: Processing Screen
 **Description:** As a user, I want live progress.
