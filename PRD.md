@@ -305,12 +305,12 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a developer, I need code tables with full requirement schema.
 
 **Acceptance Criteria:**
-- [ ] BuildingCode: id, region enum, code_id unique, name, description, version, status (DRAFT/ACTIVE/DEPRECATED), source_document_url nullable, published_at nullable, published_by nullable FK, created_at
-- [ ] CodeRequirement: id, building_code_id FK, code_ref, title, category enum, full_text, check_type enum, thresholds JSON, applies_to_drawing_types JSON, applies_to_building_types JSON, applies_to_spaces JSON, exceptions JSON, extraction_guidance, evaluation_guidance, source_page nullable, status (DRAFT/VERIFIED/PUBLISHED/DEPRECATED), created_at, updated_at
-- [ ] pgvector extension enabled, embedding vector(768) on CodeRequirement
-- [ ] Cascade: BuildingCode -> CodeRequirements
-- [ ] Migration runs
-- [ ] Typecheck passes
+- [x] BuildingCode: id, region enum, code_id unique, name, description, version, status (DRAFT/ACTIVE/DEPRECATED), source_document_url nullable, published_at nullable, published_by nullable FK, created_at
+- [x] CodeRequirement: id, building_code_id FK, code_ref, title, category enum, full_text, check_type enum, thresholds JSON, applies_to_drawing_types JSON, applies_to_building_types JSON, applies_to_spaces JSON, exceptions JSON, extraction_guidance, evaluation_guidance, source_page nullable, status (DRAFT/VERIFIED/PUBLISHED/DEPRECATED), created_at, updated_at
+- [x] pgvector extension enabled, embedding vector(768) on CodeRequirement
+- [x] Cascade: BuildingCode -> CodeRequirements
+- [x] Migration runs
+- [x] Typecheck passes
 
 ### US-005: Schema - CodeRequest and ShareToken
 **Description:** As a developer, I need supporting tables.

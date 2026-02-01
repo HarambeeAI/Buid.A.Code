@@ -79,6 +79,28 @@ enum Confidence {
   LOW
 }
 
+// Enums for BuildingCode - US-004
+enum BuildingCodeStatus {
+  DRAFT
+  ACTIVE
+  DEPRECATED
+}
+
+// Enums for CodeRequirement - US-004
+enum CodeRequirementStatus {
+  DRAFT
+  VERIFIED
+  PUBLISHED
+  DEPRECATED
+}
+
+enum CheckType {
+  MEASUREMENT_THRESHOLD
+  PRESENCE_CHECK
+  RATIO_CHECK
+  BOOLEAN_CHECK
+}
+
 // User model - US-001
 model User {
   id                 String    @id @default(uuid()) @db.Uuid
@@ -92,8 +114,9 @@ model User {
   updated_at         DateTime  @updatedAt
 
   // Relations
-  projects Project[]
-  folders  Folder[]
+  projects      Project[]
+  folders       Folder[]
+  publishedCodes BuildingCode[]
 
   @@map("users")
 }
@@ -188,4 +211,53 @@ model Finding {
   // Index for efficient querying
   @@index([analysis_id, sort_order])
   @@map("findings")
+}
+
+// BuildingCode model - US-004
+model BuildingCode {
+  id                  String             @id @default(uuid()) @db.Uuid
+  region              Region
+  code_id             String             @unique // e.g., "IRC-2021", "NCC-2022"
+  name                String
+  description         String?
+  version             String
+  status              BuildingCodeStatus @default(DRAFT)
+  source_document_url String?
+  published_at        DateTime?
+  published_by        String?            @db.Uuid
+  created_at          DateTime           @default(now())
+
+  // Relations
+  publisher    User?             @relation(fields: [published_by], references: [id], onDelete: SetNull)
+  requirements CodeRequirement[]
+
+  @@map("building_codes")
+}
+
+// CodeRequirement model - US-004
+model CodeRequirement {
+  id                       String                @id @default(uuid()) @db.Uuid
+  building_code_id         String                @db.Uuid
+  code_ref                 String                // e.g., "R302.1"
+  title                    String
+  category                 FindingCategory
+  full_text                String
+  check_type               CheckType
+  thresholds               Json                  // JSON for threshold values
+  applies_to_drawing_types Json                  // Array of page types
+  applies_to_building_types Json                 // Array of building types
+  applies_to_spaces        Json                  // Array of space types
+  exceptions               Json                  // Array of exception conditions
+  extraction_guidance      String                @db.Text
+  evaluation_guidance      String                @db.Text
+  source_page              Int?
+  status                   CodeRequirementStatus @default(DRAFT)
+  embedding                Unsupported("vector(768)")?
+  created_at               DateTime              @default(now())
+  updated_at               DateTime              @updatedAt
+
+  // Relations
+  building_code BuildingCode @relation(fields: [building_code_id], references: [id], onDelete: Cascade)
+
+  @@map("code_requirements")
 }

@@ -63,3 +63,20 @@
   - When adding a new model with a relation, update both sides (Finding model + findings[] on Analysis)
   - Composite indexes use @@index([field1, field2]) syntax in Prisma
 ---
+
+## Iteration 4 - US-004: Schema - BuildingCode and CodeRequirement
+- What was implemented:
+  - Added BuildingCode model with all required fields: id (UUID), region (FK to Region enum), code_id (unique), name, description (nullable), version, status (BuildingCodeStatus enum: DRAFT/ACTIVE/DEPRECATED), source_document_url (nullable), published_at (nullable), published_by (nullable FK to User), created_at
+  - Added CodeRequirement model with complete schema: id (UUID), building_code_id (FK), code_ref, title, category (FindingCategory enum), full_text, check_type (CheckType enum), thresholds (JSON), applies_to_drawing_types (JSON), applies_to_building_types (JSON), applies_to_spaces (JSON), exceptions (JSON), extraction_guidance (Text), evaluation_guidance (Text), source_page (nullable), status (CodeRequirementStatus enum: DRAFT/VERIFIED/PUBLISHED/DEPRECATED), embedding (vector 768 via pgvector), timestamps
+  - Added enums: BuildingCodeStatus, CodeRequirementStatus, CheckType
+  - Enabled pgvector extension for embedding support
+  - Cascade delete: BuildingCode -> CodeRequirements
+  - Added publishedCodes relation on User model for published_by FK
+- Files changed:
+  - app/prisma/schema.prisma (modified - added enums, BuildingCode, CodeRequirement models)
+  - app/prisma/migrations/0004_building_code_and_requirement/migration.sql (new)
+- Learnings for future iterations:
+  - pgvector requires `CREATE EXTENSION IF NOT EXISTS vector;` in migration SQL
+  - Use `Unsupported("vector(768)")` in Prisma schema for pgvector types
+  - When adding a FK relation like published_by, add the reverse relation on the parent model (User.publishedCodes)
+---
