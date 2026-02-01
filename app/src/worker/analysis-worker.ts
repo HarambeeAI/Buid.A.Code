@@ -1,10 +1,11 @@
 import "dotenv/config";
 import { Worker, Job } from "bullmq";
 import Redis from "ioredis";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, DocumentType } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 import { ANALYSIS_QUEUE_NAME, AnalysisJobData } from "../lib/queue";
+import { normaliseDocument, NormalisationResult } from "../pipeline/document-normalisation";
 
 // Custom backoff delays in milliseconds (30s, 60s, 120s)
 const BACKOFF_DELAYS = [30000, 60000, 120000];
@@ -74,18 +75,32 @@ async function processAnalysisJob(job: Job<AnalysisJobData>): Promise<void> {
 
   console.log(`[Worker] Analysis ${analysisId} set to CLASSIFYING`);
 
-  // TODO: Implement the full analysis pipeline in future user stories (US-034 to US-038)
-  // For now, we just set up the infrastructure
+  // Stage 1: Document Normalisation (US-034)
+  console.log(`[Worker] Starting document normalisation for ${analysisId}`);
+  const normalisationResult = await normaliseDocument(
+    prisma,
+    analysisId,
+    analysis.document_url,
+    analysis.document_type as DocumentType,
+    analysis.page_count
+  );
 
+  console.log(`[Worker] Normalisation complete: ${normalisationResult.totalPages} pages`);
+
+  // Update analysis with actual page count (may differ for TIFFs)
+  if (normalisationResult.totalPages !== analysis.page_count) {
+    await prisma.analysis.update({
+      where: { id: analysisId },
+      data: { page_count: normalisationResult.totalPages },
+    });
+  }
+
+  // TODO: Implement remaining pipeline stages in future user stories (US-035 to US-038)
   // The pipeline stages will be:
-  // 1. Document Normalisation (US-034)
-  // 2. Page Classification (US-035)
-  // 3. Matrix Analysis (US-036)
-  // 4. Cross-Validation + Scoring (US-037)
-  // 5. Recommendations + Completion (US-038)
-
-  // This placeholder allows the worker infrastructure to be tested
-  // The actual processing will be implemented in subsequent iterations
+  // 2. Page Classification (US-035) - classify each page type
+  // 3. Matrix Analysis (US-036) - code x page analysis
+  // 4. Cross-Validation + Scoring (US-037) - validate and score
+  // 5. Recommendations + Completion (US-038) - generate recommendations
 }
 
 // Create the worker

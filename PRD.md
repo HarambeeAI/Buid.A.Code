@@ -602,10 +602,10 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a developer, I need file normalisation.
 
 **Acceptance Criteria:**
-- [ ] Fetch from Buckets, PDF to 300 DPI PNGs + text, images to PNG, TIFF split
-- [ ] Store pages in Buckets under analysis prefix
-- [ ] Updates current_stage
-- [ ] Typecheck passes
+- [x] Fetch from Buckets, PDF to 300 DPI PNGs + text, images to PNG, TIFF split
+- [x] Store pages in Buckets under analysis prefix
+- [x] Updates current_stage
+- [x] Typecheck passes
 
 ### US-035: Pipeline - Page Classification
 **Description:** As a developer, I need page type detection.

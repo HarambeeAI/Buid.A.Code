@@ -722,3 +722,29 @@
   - Worker graceful shutdown: close worker first, then Prisma disconnect
   - Run worker with: `npm run worker` (production) or `npm run worker:dev` (development with watch)
 ---
+
+## Iteration 35 - US-034: Pipeline - Document Normalisation
+- What was implemented:
+  - Storage utility in src/lib/storage.ts for S3-compatible bucket operations (fetch/upload)
+  - AWS Signature V4 authentication for GET and PUT requests
+  - Document normalisation pipeline in src/pipeline/document-normalisation.ts
+  - PDF to 300 DPI PNG conversion using pdf-to-img library (scale = 300/72)
+  - Image normalisation (PNG/JPG to PNG) using sharp library
+  - Multi-page TIFF splitting using sharp's page option
+  - Pages stored in Buckets under `analyses/{analysisId}/pages/page-NNNN.png` prefix
+  - current_stage updated throughout normalisation process
+  - Worker integration: normaliseDocument called after CLASSIFYING status set
+  - Added pdf-to-img and sharp dependencies
+- Files changed:
+  - app/src/lib/storage.ts (new) - S3-compatible storage utilities
+  - app/src/pipeline/document-normalisation.ts (new) - Document normalisation pipeline
+  - app/src/worker/analysis-worker.ts (modified) - Integrated normalisation step
+  - app/package.json (modified) - Added pdf-to-img and sharp dependencies
+- Learnings for future iterations:
+  - pdf-to-img is an ESM module, use dynamic import: `const { pdf } = await import("pdf-to-img")`
+  - PDF default DPI is 72, scale factor for 300 DPI is 300/72 ≈ 4.17
+  - sharp can read multi-page TIFFs using the `page` option in constructor
+  - Buffer must be converted to Uint8Array for fetch body in TypeScript strict mode
+  - AWS Signature V4 for PUT requires content-sha256 header with hash of body
+  - Store page images with zero-padded page numbers (page-0001.png) for proper sorting
+---
