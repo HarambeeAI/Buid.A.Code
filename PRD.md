@@ -480,10 +480,10 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a user, I want to see all projects.
 
 **Acceptance Criteria:**
-- [ ] /projects paginated, cards with name/description/count/date
-- [ ] New Project button, click navigates, empty state
-- [ ] Typecheck passes
-- [ ] Verify changes work in browser
+- [x] /projects paginated, cards with name/description/count/date
+- [x] New Project button, click navigates, empty state
+- [x] Typecheck passes
+- [x] Verify changes work in browser
 
 ### US-023: Create/Edit Project Modal
 **Description:** As a user, I want project creation/editing.

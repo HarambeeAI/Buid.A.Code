@@ -417,3 +417,23 @@
   - Client components can fetch data via API routes to avoid server component complexity
   - Group recent analyses from multiple projects on client-side for dashboard view
 ---
+
+## Iteration 22 - US-022: Projects List Page
+- What was implemented:
+  - /projects page with paginated project cards
+  - Project cards display name, description, analysis count, and updated date
+  - Grid layout (1/2/3 columns responsive) with hover effects
+  - Empty state with CTA to create first project
+  - Pagination component with ellipsis for large page counts
+  - "New Project" button linking to /projects/new
+  - Loading skeleton while fetching data
+  - Error state with retry option
+  - Client-side data fetching using existing /api/projects endpoint
+- Files changed:
+  - app/src/app/(authenticated)/projects/page.tsx (new) - Projects list page with pagination
+- Learnings for future iterations:
+  - Follow existing dashboard patterns for client-side data fetching
+  - Use useCallback for fetch functions to avoid stale closures in useEffect
+  - Pagination logic handles edge cases with ellipsis for middle pages
+  - Build passes even when routes use dynamic features like cookies (just informational warnings)
+---
