@@ -574,11 +574,11 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a user, I want to filter and jump to findings.
 
 **Acceptance Criteria:**
-- [ ] Colour-coded dots + code_ref list, click scrolls
-- [ ] Filter tabs: All/Critical/Warning/Compliant/Not Assessed
-- [ ] Search by code_ref or keyword
-- [ ] Typecheck passes
-- [ ] Verify changes work in browser
+- [x] Colour-coded dots + code_ref list, click scrolls
+- [x] Filter tabs: All/Critical/Warning/Compliant/Not Assessed
+- [x] Search by code_ref or keyword
+- [x] Typecheck passes
+- [x] Verify changes work in browser
 
 ### US-032: Original Plan Viewer
 **Description:** As a user, I want to view uploaded documents.

@@ -649,3 +649,25 @@
   - US-029 and US-030 had significant overlap - the FindingCard component was built as part of the three-panel layout
   - When reviewing PRD, note that related components may have been built together even if split into separate user stories
 ---
+
+## Iteration 32 - US-031: Quick-Nav Sidebar + Filtering
+- What was implemented:
+  - Verified US-031 was already implemented as part of US-029 Report Layout iteration
+  - QuickNav component at report/page.tsx:965-1099 has all required features:
+    - Colour-coded dots + code_ref list with click-to-scroll (lines 1079-1095, scrollToFinding function at 1002-1010)
+    - Filter tabs: All/Critical/Warning/Compliant/Not Assessed (lines 1037-1054)
+    - Search by code_ref or keyword (lines 1027-1035, filter logic at 993-1000)
+    - getStatusDotColor function returns appropriate colors (lines 978-991)
+    - filteredFindings array combines filter + search (lines 993-1000)
+    - scrollToCategory function for category headers (lines 1013-1018)
+  - TypeScript typecheck passes
+  - Next.js build passes
+  - Dev server responds with HTTP 200
+- Files changed:
+  - PRD.md (modified) - Marked US-031 complete
+  - progress.txt (modified) - Added this iteration
+- Learnings for future iterations:
+  - US-029, US-030, and US-031 had significant overlap - the three-panel layout included QuickNav from the start
+  - When implementing complex UI features, check if multiple user stories can be satisfied together
+  - QuickNav pattern: search + filter state, computed filteredFindings, scrollToFinding/scrollToCategory helpers
+---
