@@ -885,3 +885,61 @@
   - Build output shows "ƒ Proxy (Middleware)" when middleware is active
   - Middleware runs at edge - can use Prisma but should keep queries minimal
 ---
+
+## Iteration 42 - US-041: Admin - Code List + Create
+- What was implemented:
+  - GET /api/admin/codes endpoint to list all building codes with pagination, region/status filters, requirement count
+  - POST /api/admin/codes endpoint to create building code with DRAFT status
+  - /admin/codes page with codes table showing name, region, version, status chip, requirement count
+  - AddCodeModal component with form for name, code_id, region, version, description
+  - Admin layout (app/admin/layout.tsx) that wraps pages with AppLayout
+  - Middleware updated to use `runtime = "nodejs"` for Prisma compatibility (edge runtime doesn't support crypto module)
+  - Filter controls for region and status on code list
+  - Pagination component for code list
+  - Row click navigates to code detail page (future feature)
+- Files changed:
+  - app/src/app/api/admin/codes/route.ts (new) - GET and POST endpoints
+  - app/src/app/admin/codes/page.tsx (new) - Admin codes list page with Add modal
+  - app/src/app/admin/layout.tsx (new) - Admin layout wrapper
+  - app/src/middleware.ts (modified) - Added runtime = "nodejs" for Prisma compatibility
+- Learnings for future iterations:
+  - Next.js middleware defaults to edge runtime which doesn't support Node.js crypto module
+  - Add `export const runtime = "nodejs"` in middleware.ts when using Prisma
+  - Admin routes are protected by middleware (307 redirect for pages, 401 for API)
+  - 409 Conflict for duplicate code_id when creating building codes
+  - Zod regex validation for code_id format (uppercase, numbers, hyphens)
+---
+
+## Iteration 43 - US-042: Admin - AI Requirement Extraction
+- What was implemented:
+  - POST /api/admin/codes/:id/upload - uploads building code PDF to S3-compatible bucket
+  - POST /api/admin/codes/:id/extract - extracts requirements from PDF using Gemini AI vision
+  - GET /api/admin/codes/:id - gets building code details with requirement count
+  - PATCH /api/admin/codes/:id - updates building code fields
+  - GET /api/admin/codes/:id/requirements - lists requirements with pagination and filters
+  - Admin code detail page at /admin/codes/:id with:
+    - Upload PDF button with progress indicator
+    - Extract Requirements button with Gemini AI integration
+    - Status counts dashboard (Draft/Verified/Published/Deprecated)
+    - Requirements table with code_ref, title, category, status, source page
+    - Status filter for requirements list
+    - Pagination for large requirement sets
+  - AI extraction converts PDF to images (300 DPI) and processes in batches of 5 pages
+  - Extracts structured requirements with code_ref, title, category, check_type, thresholds, guidance
+  - Creates CodeRequirement records with DRAFT status
+  - Returns "X requirements found" progress message
+- Files changed:
+  - app/src/app/api/admin/codes/[id]/route.ts (new) - GET and PATCH code endpoints
+  - app/src/app/api/admin/codes/[id]/upload/route.ts (new) - PDF upload endpoint
+  - app/src/app/api/admin/codes/[id]/extract/route.ts (new) - AI extraction endpoint
+  - app/src/app/api/admin/codes/[id]/requirements/route.ts (new) - Requirements list endpoint
+  - app/src/app/admin/codes/[id]/page.tsx (new) - Code detail page with upload/extract UI
+  - PRD.md (modified) - Marked US-042 complete
+- Learnings for future iterations:
+  - Use pdf-to-img library for PDF to PNG conversion with dynamic import
+  - Process PDF pages in batches (5 pages at a time) to avoid token limits
+  - Use Prisma.InputJsonValue cast for JSON fields in create operations
+  - Gemini extraction prompt should include explicit field definitions and examples
+  - File upload uses FormData API with multipart/form-data
+  - S3 file keys should include code ID for organization: `codes/{codeId}/{timestamp}_{filename}`
+---

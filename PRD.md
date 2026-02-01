@@ -678,12 +678,12 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As an admin, I want AI-extracted requirements from code PDFs.
 
 **Acceptance Criteria:**
-- [ ] Upload PDF button, stores in Buckets
-- [ ] "Extract" triggers Gemini extraction
-- [ ] Saves draft CodeRequirements
-- [ ] Progress: "X requirements found"
-- [ ] Typecheck passes
-- [ ] Verify changes work in browser
+- [x] Upload PDF button, stores in Buckets
+- [x] "Extract" triggers Gemini extraction
+- [x] Saves draft CodeRequirements
+- [x] Progress: "X requirements found"
+- [x] Typecheck passes
+- [x] Verify changes work in browser
 
 ### US-043: Admin - Requirement Review + Edit
 **Description:** As an admin, I want to verify extracted requirements.
