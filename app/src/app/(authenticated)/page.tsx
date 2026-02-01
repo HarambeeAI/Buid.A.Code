@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import ProjectModal from "@/components/projects/ProjectModal";
 
 type User = {
   id: string;
@@ -185,16 +186,16 @@ function TierCard({ user }: { user: User }) {
   );
 }
 
-function QuickActions() {
+function QuickActions({ onNewProject }: { onNewProject: () => void }) {
   return (
     <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6">
       <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
         Quick Actions
       </h2>
       <div className="space-y-3">
-        <Link
-          href="/projects/new"
-          className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        <button
+          onClick={onNewProject}
+          className="w-full flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-left"
         >
           <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
             <svg
@@ -219,10 +220,10 @@ function QuickActions() {
               Create a new project to organize analyses
             </p>
           </div>
-        </Link>
+        </button>
 
         <Link
-          href="/projects?action=new-analysis"
+          href="/projects"
           className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
         >
           <div className="w-10 h-10 rounded-lg bg-green-100 dark:bg-green-900 flex items-center justify-center">
@@ -281,7 +282,7 @@ function RecentAnalyses({ analyses }: { analyses: Analysis[] }) {
             No analyses yet
           </p>
           <Link
-            href="/projects?action=new-analysis"
+            href="/projects"
             className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
           >
             Start Your First Analysis
@@ -347,7 +348,7 @@ function RecentAnalyses({ analyses }: { analyses: Analysis[] }) {
   );
 }
 
-function EmptyDashboard() {
+function EmptyDashboard({ onNewProject }: { onNewProject: () => void }) {
   return (
     <div className="text-center py-12">
       <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
@@ -373,8 +374,8 @@ function EmptyDashboard() {
         drawings and get professional compliance reports in minutes.
       </p>
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
-        <Link
-          href="/projects/new"
+        <button
+          onClick={onNewProject}
           className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
         >
           <svg
@@ -391,7 +392,7 @@ function EmptyDashboard() {
             />
           </svg>
           Create Your First Project
-        </Link>
+        </button>
         <Link
           href="/codes"
           className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg font-medium transition-colors"
@@ -407,6 +408,7 @@ export default function Dashboard() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     async function fetchDashboardData() {
@@ -475,6 +477,19 @@ export default function Dashboard() {
     fetchDashboardData();
   }, []);
 
+  const handleNewProject = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleModalSuccess = () => {
+    // Refresh the dashboard data
+    window.location.reload();
+  };
+
   if (loading) {
     return (
       <div className="animate-pulse space-y-6">
@@ -519,13 +534,19 @@ export default function Dashboard() {
         </h1>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
-            <EmptyDashboard />
+            <EmptyDashboard onNewProject={handleNewProject} />
           </div>
           <div className="space-y-6">
             <TierCard user={user} />
-            <QuickActions />
+            <QuickActions onNewProject={handleNewProject} />
           </div>
         </div>
+        <ProjectModal
+          isOpen={isModalOpen}
+          onClose={handleModalClose}
+          onSuccess={handleModalSuccess}
+          project={null}
+        />
       </div>
     );
   }
@@ -541,9 +562,15 @@ export default function Dashboard() {
         </div>
         <div className="space-y-6">
           <TierCard user={user} />
-          <QuickActions />
+          <QuickActions onNewProject={handleNewProject} />
         </div>
       </div>
+      <ProjectModal
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        onSuccess={handleModalSuccess}
+        project={null}
+      />
     </div>
   );
 }

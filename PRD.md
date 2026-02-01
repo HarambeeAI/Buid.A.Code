@@ -489,10 +489,10 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a user, I want project creation/editing.
 
 **Acceptance Criteria:**
-- [ ] Modal: Name, Description, Folder dropdown
-- [ ] POST or PATCH, validation, closes on success
-- [ ] Typecheck passes
-- [ ] Verify changes work in browser
+- [x] Modal: Name, Description, Folder dropdown
+- [x] POST or PATCH, validation, closes on success
+- [x] Typecheck passes
+- [x] Verify changes work in browser
 
 ### US-024: Project Detail - Analysis History
 **Description:** As a user, I want project analysis list.

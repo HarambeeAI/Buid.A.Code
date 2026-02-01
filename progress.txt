@@ -437,3 +437,29 @@
   - Pagination logic handles edge cases with ellipsis for middle pages
   - Build passes even when routes use dynamic features like cookies (just informational warnings)
 ---
+
+## Iteration 23 - US-023: Create/Edit Project Modal
+- What was implemented:
+  - ProjectModal component with Name, Description, and Folder dropdown fields
+  - Modal supports both create (POST) and edit (PATCH) modes via project prop
+  - Folder dropdown fetches user's folders from /api/folders on modal open
+  - Form validation with required name field, character limits
+  - Loading states for form submission and folder loading
+  - Error display with styled error banner
+  - Click-outside-to-close and backdrop blur
+  - Integrated modal into Projects List page (replaced /projects/new link with button)
+  - Project cards now have edit button (appears on hover)
+  - Integrated modal into Dashboard for quick action and empty state
+  - Closes on success, triggers list refresh
+- Files changed:
+  - app/src/components/projects/ProjectModal.tsx (new) - Modal component
+  - app/src/components/projects/index.ts (new) - Component exports
+  - app/src/app/(authenticated)/projects/page.tsx (modified) - Integrated modal, added edit button to cards
+  - app/src/app/(authenticated)/page.tsx (modified) - Integrated modal for dashboard quick actions
+- Learnings for future iterations:
+  - Modal pattern: isOpen prop, onClose callback, onSuccess callback for parent state management
+  - Use useCallback for fetch functions in modals to avoid stale closures
+  - Check project prop to determine create vs edit mode
+  - Backdrop blur with bg-black/50 backdrop-blur-sm for nice modal overlay
+  - Click on backdrop (e.target === e.currentTarget) to close modal
+---

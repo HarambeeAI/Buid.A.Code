@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import ProjectModal from "@/components/projects/ProjectModal";
 
 type Project = {
   id: string;
@@ -13,7 +14,7 @@ type Project = {
   analysis_count: number;
 };
 
-type Pagination = {
+type PaginationData = {
   page: number;
   limit: number;
   total: number;
@@ -22,7 +23,7 @@ type Pagination = {
 
 type ProjectsData = {
   projects: Project[];
-  pagination: Pagination;
+  pagination: PaginationData;
 };
 
 function formatDate(dateString: string): string {
@@ -34,14 +35,20 @@ function formatDate(dateString: string): string {
   });
 }
 
-function ProjectCard({ project }: { project: Project }) {
+function ProjectCard({
+  project,
+  onEdit,
+}: {
+  project: Project;
+  onEdit: (project: Project) => void;
+}) {
   return (
-    <Link
-      href={`/projects/${project.id}`}
-      className="block bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-md transition-all"
-    >
+    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-md transition-all group">
       <div className="flex items-start justify-between mb-3">
-        <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900 flex items-center justify-center flex-shrink-0">
+        <Link
+          href={`/projects/${project.id}`}
+          className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900 flex items-center justify-center flex-shrink-0"
+        >
           <svg
             className="w-5 h-5 text-blue-600 dark:text-blue-400"
             fill="none"
@@ -55,14 +62,38 @@ function ProjectCard({ project }: { project: Project }) {
               d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
             />
           </svg>
+        </Link>
+        <div className="flex items-center gap-2">
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+            {project.analysis_count}{" "}
+            {project.analysis_count === 1 ? "analysis" : "analyses"}
+          </span>
+          <button
+            onClick={() => onEdit(project)}
+            className="opacity-0 group-hover:opacity-100 p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-all"
+            title="Edit project"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+              />
+            </svg>
+          </button>
         </div>
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
-          {project.analysis_count} {project.analysis_count === 1 ? "analysis" : "analyses"}
-        </span>
       </div>
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1 truncate">
-        {project.name}
-      </h3>
+      <Link href={`/projects/${project.id}`} className="block">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1 truncate hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+          {project.name}
+        </h3>
+      </Link>
       {project.description && (
         <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-3">
           {project.description}
@@ -71,11 +102,11 @@ function ProjectCard({ project }: { project: Project }) {
       <p className="text-xs text-gray-500 dark:text-gray-500">
         Updated {formatDate(project.updated_at)}
       </p>
-    </Link>
+    </div>
   );
 }
 
-function EmptyState() {
+function EmptyState({ onCreateClick }: { onCreateClick: () => void }) {
   return (
     <div className="text-center py-16">
       <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
@@ -97,10 +128,11 @@ function EmptyState() {
         No projects yet
       </h3>
       <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-sm mx-auto">
-        Create your first project to start organizing your building plan analyses.
+        Create your first project to start organizing your building plan
+        analyses.
       </p>
-      <Link
-        href="/projects/new"
+      <button
+        onClick={onCreateClick}
         className="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
       >
         <svg
@@ -117,7 +149,7 @@ function EmptyState() {
           />
         </svg>
         Create Your First Project
-      </Link>
+      </button>
     </div>
   );
 }
@@ -126,7 +158,7 @@ function Pagination({
   pagination,
   onPageChange,
 }: {
-  pagination: Pagination;
+  pagination: PaginationData;
   onPageChange: (page: number) => void;
 }) {
   const { page, total_pages } = pagination;
@@ -220,6 +252,10 @@ export default function ProjectsPage() {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
+  // Modal state
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
+
   const fetchProjects = useCallback(async (page: number) => {
     setLoading(true);
     setError(null);
@@ -252,6 +288,26 @@ export default function ProjectsPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const openCreateModal = () => {
+    setEditingProject(null);
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (project: Project) => {
+    setEditingProject(project);
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    setEditingProject(null);
+  };
+
+  const handleModalSuccess = () => {
+    // Refresh the projects list
+    fetchProjects(currentPage);
+  };
+
   if (loading && !data) {
     return <LoadingSkeleton />;
   }
@@ -282,8 +338,8 @@ export default function ProjectsPage() {
         <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
           Projects
         </h1>
-        <Link
-          href="/projects/new"
+        <button
+          onClick={openCreateModal}
           className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
         >
           <svg
@@ -300,21 +356,33 @@ export default function ProjectsPage() {
             />
           </svg>
           New Project
-        </Link>
+        </button>
       </div>
 
       {projects.length === 0 ? (
-        <EmptyState />
+        <EmptyState onCreateClick={openCreateModal} />
       ) : (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {projects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
+              <ProjectCard
+                key={project.id}
+                project={project}
+                onEdit={openEditModal}
+              />
             ))}
           </div>
           <Pagination pagination={pagination} onPageChange={handlePageChange} />
         </>
       )}
+
+      {/* Project Modal */}
+      <ProjectModal
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        onSuccess={handleModalSuccess}
+        project={editingProject}
+      />
     </div>
   );
 }
