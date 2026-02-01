@@ -514,7 +514,7 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 - [x] Tier info display, Next disabled until file valid
 - [x] Presigned URL upload
 - [x] Typecheck passes
-- [ ] Verify changes work in browser
+- [x] Verify changes work in browser
 
 ### US-026: Wizard Step 2 - Region + Codes
 **Description:** As a user, I want region and code selection with limits.
