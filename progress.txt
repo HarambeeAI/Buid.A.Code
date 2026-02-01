@@ -601,3 +601,26 @@
   - STATUS_ORDER mapping for comparing progress between steps
   - Small delay before redirect lets users see completion state (better UX)
 ---
+
+## Iteration 30 - US-029: Report Layout - Header, Score, Quick-Nav
+- What was implemented:
+  - Full report page at /projects/:id/analyses/:analysisId/report with three-panel layout
+  - Left panel: ScoreDonut component (animated SVG), StatusStamp (PASS/CONDITIONAL/FAIL), BreakdownBar (color-coded finding distribution), summary stats
+  - Center panel: Findings grouped by category with FindingCard components
+  - Right panel: QuickNav with search, filter tabs (All/Critical/Warning/Compliant/Not Assessed), category links, finding list with scroll-to navigation
+  - Header: breadcrumb navigation, report_ref, date, Report/Plan toggle, Share button (copies URL to clipboard), Export button (tier-aware)
+  - Export: Pro users download PDF, Free users see upgrade alert
+  - Share: Creates share link via POST /api/analyses/:id/share, copies to clipboard
+  - Plan view: Placeholder for future document viewer with download link
+  - Responsive stacking: flex-col on mobile, flex-row on desktop (lg breakpoint)
+  - All finding cards have: code_ref, status badge, confidence badge, Required vs As Shown, page ref, location, LOW confidence warning, recommendation callout
+- Files changed:
+  - app/src/app/(authenticated)/projects/[id]/analyses/[analysisId]/report/page.tsx (new) - Full report page
+  - PRD.md (modified) - Marked US-029 complete
+- Learnings for future iterations:
+  - Score donut: SVG circle with strokeDasharray/strokeDashoffset for progress animation
+  - sticky positioning (sticky top-6) works well for side panels in three-column layouts
+  - scrollIntoView with block: "center" for findings, "start" for category headers
+  - Temporary highlight with classList add/remove + setTimeout for scroll-to indication
+  - clipboard API (navigator.clipboard.writeText) for share link copying
+---

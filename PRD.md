@@ -553,12 +553,12 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a user, I want professional report layout.
 
 **Acceptance Criteria:**
-- [ ] Three-panel: left (score donut, status stamp, breakdown), centre (findings), right (quick-nav)
-- [ ] Header: report_ref, project, date, PASS/CONDITIONAL/FAIL stamp, Report/Plan toggle, Share + Export
-- [ ] Export: Pro downloads, Free shows upgrade CTA
-- [ ] Responsive stacking
-- [ ] Typecheck passes
-- [ ] Verify changes work in browser
+- [x] Three-panel: left (score donut, status stamp, breakdown), centre (findings), right (quick-nav)
+- [x] Header: report_ref, project, date, PASS/CONDITIONAL/FAIL stamp, Report/Plan toggle, Share + Export
+- [x] Export: Pro downloads, Free shows upgrade CTA
+- [x] Responsive stacking
+- [x] Typecheck passes
+- [x] Verify changes work in browser
 
 ### US-030: Finding Cards with Categories and Confidence
 **Description:** As a user, I want grouped, confidence-scored findings.
