@@ -776,3 +776,26 @@
   - Classification prompt should include explicit page type definitions for accuracy
   - Graceful degradation: default to "other" type if classification fails
 ---
+
+## Iteration 37 - US-036: Pipeline - Matrix Analysis
+- What was implemented:
+  - Matrix analysis pipeline in src/pipeline/matrix-analysis.ts
+  - Fetches PUBLISHED CodeRequirements for selected building codes via Prisma
+  - Builds code x page matrix by matching requirement.applies_to_drawing_types with page.pageType
+  - Constructs detailed Gemini prompts from requirement fields (code_ref, full_text, thresholds, exceptions, extraction_guidance, evaluation_guidance)
+  - Gemini vision calls with structured JSON response (measurements_found, status, confidence, reasoning, required_value, proposed_value, recommendation)
+  - Parallel batch processing with configurable batch size (default 10 concurrent calls)
+  - Progressive total_checks update during processing via Prisma
+  - Error handling with graceful fallback to NOT_ASSESSED status
+  - Integrated into analysis-worker.ts after page classification step
+- Files changed:
+  - app/src/pipeline/matrix-analysis.ts (new) - Core matrix analysis pipeline
+  - app/src/worker/analysis-worker.ts (modified) - Integrated matrix analysis step
+- Learnings for future iterations:
+  - Matrix building: filter pages by pageType matching applies_to_drawing_types array
+  - Support "all" in applies_to_drawing_types to match all page types
+  - Promise.all for parallel batch processing within each batch
+  - Progressive DB updates during long-running analysis for real-time progress tracking
+  - Graceful error handling: return NOT_ASSESSED on failure rather than throwing
+  - JSON prompt structure should include explicit field definitions and example responses
+---

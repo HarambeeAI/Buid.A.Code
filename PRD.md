@@ -620,13 +620,13 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a developer, I need the core code x page analysis loop.
 
 **Acceptance Criteria:**
-- [ ] Fetch PUBLISHED CodeRequirements for selected codes
-- [ ] Build matrix: requirement x matching pages
-- [ ] Construct prompts from requirement fields
-- [ ] Gemini calls with image + prompt, parse JSON response
-- [ ] Parallel batches (max 10 concurrent)
-- [ ] Progressive total_checks update
-- [ ] Typecheck passes
+- [x] Fetch PUBLISHED CodeRequirements for selected codes
+- [x] Build matrix: requirement x matching pages
+- [x] Construct prompts from requirement fields
+- [x] Gemini calls with image + prompt, parse JSON response
+- [x] Parallel batches (max 10 concurrent)
+- [x] Progressive total_checks update
+- [x] Typecheck passes
 
 ### US-037: Pipeline - Cross-Validation + Scoring
 **Description:** As a developer, I need validation and scoring.

@@ -7,6 +7,7 @@ import { Pool } from "pg";
 import { ANALYSIS_QUEUE_NAME, AnalysisJobData } from "../lib/queue";
 import { normaliseDocument, NormalisationResult } from "../pipeline/document-normalisation";
 import { classifyPages } from "../pipeline/page-classification";
+import { runMatrixAnalysis } from "../pipeline/matrix-analysis";
 
 // Custom backoff delays in milliseconds (30s, 60s, 120s)
 const BACKOFF_DELAYS = [30000, 60000, 120000];
@@ -106,9 +107,20 @@ async function processAnalysisJob(job: Job<AnalysisJobData>): Promise<void> {
 
   console.log(`[Worker] Classification complete: ${classificationResult.totalPages} pages classified`);
 
-  // TODO: Implement remaining pipeline stages in future user stories (US-036 to US-038)
+  // Stage 3: Matrix Analysis (US-036)
+  console.log(`[Worker] Starting matrix analysis for ${analysisId}`);
+  const selectedCodes = analysis.selected_codes as string[];
+  const matrixResult = await runMatrixAnalysis(
+    prisma,
+    analysisId,
+    selectedCodes,
+    classificationResult.pages
+  );
+
+  console.log(`[Worker] Matrix analysis complete: ${matrixResult.totalChecks} checks performed`);
+
+  // TODO: Implement remaining pipeline stages in future user stories (US-037 to US-038)
   // The pipeline stages will be:
-  // 3. Matrix Analysis (US-036) - code x page analysis
   // 4. Cross-Validation + Scoring (US-037) - validate and score
   // 5. Recommendations + Completion (US-038) - generate recommendations
 }
