@@ -394,3 +394,26 @@
   - Use mock NextRequest for server components that need Logto context
   - Client components need "use client" directive and mounted check to avoid hydration mismatch
 ---
+
+## Iteration 21 - US-021: Dashboard
+- What was implemented:
+  - Dashboard page (/) with full client-side data fetching
+  - Tier card showing FREE/PRO status with upgrade CTA for free users
+  - Progress bar for analyses remaining (2 total for FREE tier)
+  - Recent 5 analyses section with status chips (COMPLETED/PENDING/FAILED etc.) and overall status (PASS/CONDITIONAL/FAIL)
+  - Quick actions: New Project and New Analysis buttons
+  - Empty state with welcome message and CTAs for first-time users
+  - Loading skeleton while data is fetched
+  - Error handling with retry option
+  - Fixed Prisma 7.x configuration to use @prisma/adapter-pg driver adapter
+- Files changed:
+  - app/src/app/(authenticated)/page.tsx (modified) - Full dashboard implementation
+  - app/src/lib/prisma.ts (modified) - Updated for Prisma 7 pg adapter
+  - app/prisma/schema.prisma (modified) - Added engineType = "binary"
+  - app/package.json (modified) - Added @prisma/adapter-pg, pg, @types/pg
+- Learnings for future iterations:
+  - Prisma 7.x requires driver adapter (@prisma/adapter-pg for PostgreSQL)
+  - Initialize PrismaClient with adapter: `new PrismaClient({ adapter: new PrismaPg(pool) })`
+  - Client components can fetch data via API routes to avoid server component complexity
+  - Group recent analyses from multiple projects on client-side for dashboard view
+---

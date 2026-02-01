@@ -468,13 +468,13 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a user, I want activity feed and tier status.
 
 **Acceptance Criteria:**
-- [ ] Default route (/)
-- [ ] Tier card with upgrade CTA for free users
-- [ ] Recent 5 analyses with status chips
-- [ ] Quick actions: New Project, New Analysis
-- [ ] Empty state with CTA
-- [ ] Typecheck passes
-- [ ] Verify changes work in browser
+- [x] Default route (/)
+- [x] Tier card with upgrade CTA for free users
+- [x] Recent 5 analyses with status chips
+- [x] Quick actions: New Project, New Analysis
+- [x] Empty state with CTA
+- [x] Typecheck passes
+- [x] Verify changes work in browser
 
 ### US-022: Projects List Page
 **Description:** As a user, I want to see all projects.
