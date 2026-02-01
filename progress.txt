@@ -251,3 +251,19 @@
   - Prisma cascade on Analysis -> Findings and ShareTokens handles cleanup automatically
   - Filter params need explicit type casting for enum values in where clause
 ---
+
+## Iteration 14 - US-014: Analysis Status Endpoint
+- What was implemented:
+  - GET /api/analyses/:id/status - lightweight polling endpoint for analysis progress
+  - Returns only status-related fields: status, current_stage, compliance_score, overall_status, total_checks, started_at, completed_at, created_at
+  - Minimal Prisma query using select to fetch only required fields (optimized for < 50ms)
+  - Returns 404 for both "not found" and "not owned" cases (security best practice - don't leak existence)
+  - UUID validation for analysis ID parameter
+  - All endpoints require authentication
+- Files changed:
+  - app/src/app/api/analyses/[id]/status/route.ts (new) - Lightweight status endpoint
+- Learnings for future iterations:
+  - Use Prisma select to fetch only needed fields for performance-sensitive endpoints
+  - Return same 404 error for both "not found" and "not owned" to prevent information leakage
+  - Status endpoint pattern: minimal payload, single DB query, no nested relations except for ownership check
+---

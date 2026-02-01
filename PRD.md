@@ -404,10 +404,10 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a developer, I need lightweight polling.
 
 **Acceptance Criteria:**
-- [ ] Returns status, current_stage, score, overall_status, total_checks, timestamps
-- [ ] < 50ms response
-- [ ] 404 if not found/owned
-- [ ] Typecheck passes
+- [x] Returns status, current_stage, score, overall_status, total_checks, timestamps
+- [x] < 50ms response
+- [x] 404 if not found/owned
+- [x] Typecheck passes
 
 ### US-015: File Upload with Tier Validation
 **Description:** As a user, I want document upload with type and size checks.
