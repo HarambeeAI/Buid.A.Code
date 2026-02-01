@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import { DocumentViewer } from "@/components/viewer";
 
 // Types
 type FindingStatus = "COMPLIANT" | "WARNING" | "CRITICAL" | "NOT_ASSESSED";
@@ -344,6 +345,13 @@ export default function ReportPage() {
   const [shareLoading, setShareLoading] = useState(false);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [exportLoading, setExportLoading] = useState(false);
+  const [viewerPage, setViewerPage] = useState(1);
+
+  // Navigate to Plan view and specific page from findings
+  const viewPageInDocument = useCallback((pageNumber: number) => {
+    setViewerPage(pageNumber);
+    setView("plan");
+  }, []);
 
   const fetchReport = useCallback(async () => {
     try {
@@ -742,7 +750,11 @@ export default function ReportPage() {
                       </h3>
                       <div className="space-y-4">
                         {findings_by_category[category].map((finding) => (
-                          <FindingCard key={finding.id} finding={finding} />
+                          <FindingCard
+                            key={finding.id}
+                            finding={finding}
+                            onViewPage={viewPageInDocument}
+                          />
                         ))}
                       </div>
                     </div>
@@ -762,51 +774,16 @@ export default function ReportPage() {
           </div>
         </div>
       ) : (
-        /* Plan View - Document Viewer Placeholder */
-        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-12 text-center">
-          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-            <svg
-              className="w-10 h-10 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              />
-            </svg>
-          </div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-            Document Viewer
-          </h3>
-          <p className="text-gray-500 dark:text-gray-400 max-w-md mx-auto">
-            The document viewer will be implemented in a future update. You can
-            download the original document to view it locally.
-          </p>
-          <a
-            href={report.document_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
-          >
-            <svg
-              className="w-4 h-4 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-              />
-            </svg>
-            Download Document
-          </a>
+        /* Plan View - Document Viewer */
+        <div className="h-[calc(100vh-220px)] min-h-[600px]">
+          <DocumentViewer
+            documentUrl={report.document_url}
+            documentType={report.document_type}
+            documentName={report.document_name}
+            pageCount={report.page_count}
+            initialPage={viewerPage}
+            onPageChange={setViewerPage}
+          />
         </div>
       )}
     </div>
@@ -814,7 +791,13 @@ export default function ReportPage() {
 }
 
 // Finding Card Component
-function FindingCard({ finding }: { finding: Finding }) {
+function FindingCard({
+  finding,
+  onViewPage,
+}: {
+  finding: Finding;
+  onViewPage?: (page: number) => void;
+}) {
   const getStatusStyles = () => {
     switch (finding.status) {
       case "CRITICAL":
@@ -881,9 +864,32 @@ function FindingCard({ finding }: { finding: Finding }) {
           </span>
         </div>
         {finding.page_number && (
-          <span className="text-xs text-gray-500 dark:text-gray-400">
+          <button
+            onClick={() => onViewPage?.(finding.page_number!)}
+            className="inline-flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+            title="View this page in the document viewer"
+          >
+            <svg
+              className="w-3.5 h-3.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+              />
+            </svg>
             Page {finding.page_number}
-          </span>
+          </button>
         )}
       </div>
 

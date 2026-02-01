@@ -584,10 +584,10 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a user, I want to view uploaded documents.
 
 **Acceptance Criteria:**
-- [ ] Plan toggle replaces centre with viewer (react-pdf for PDF, image viewer for images)
-- [ ] Page nav + zoom, "View Page" links from findings
-- [ ] Typecheck passes
-- [ ] Verify changes work in browser
+- [x] Plan toggle replaces centre with viewer (react-pdf for PDF, image viewer for images)
+- [x] Page nav + zoom, "View Page" links from findings
+- [x] Typecheck passes
+- [x] Verify changes work in browser
 
 ### US-033: Worker Setup - BullMQ Consumer
 **Description:** As a developer, I need queue infrastructure.
