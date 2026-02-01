@@ -3,4 +3,47 @@
 ## Learnings
 (Patterns discovered during implementation)
 
+- Prisma 7.x uses a new config format: datasource URL goes in prisma.config.ts, not in schema.prisma
+- Use `prisma-client-js` as the generator provider (not `prisma-client`)
+- Prisma validate and generate work without a running database - good for CI/CD
+- Use `prisma migrate diff --from-empty --to-schema ./prisma/schema.prisma --script` to preview migration SQL
+
+---
+
+## Iteration 1 - US-001: Core Schema - User, Project, Folder
+- What was implemented:
+  - Next.js 14+ project with TypeScript and Tailwind CSS
+  - Prisma schema with User, Project, Folder models
+  - User model: UUID id, logto_user_id (unique), email, name, tier (FREE/PRO default FREE), analyses_remaining (default 2, nullable), role (USER/ADMIN default USER), timestamps
+  - Folder model: user_id FK with cascade delete
+  - Project model: user_id FK with cascade delete, folder_id FK with SET NULL on delete
+  - Migration SQL file ready for Railway PostgreSQL
+  - Prisma client helper in src/lib/prisma.ts
+- Files changed:
+  - app/prisma/schema.prisma (new)
+  - app/prisma/migrations/0001_init/migration.sql (new)
+  - app/src/lib/prisma.ts (new)
+  - app/prisma.config.ts (modified for Prisma 7)
+  - app/.env.example (new)
+- Learnings for future iterations:
+  - Project is inside /app subdirectory due to npm naming restrictions
+  - TypeScript check: `npx tsc --noEmit`
+  - Prisma validation: `npx prisma validate`
+  - Migration preview: `npx prisma migrate diff --from-empty --to-schema ./prisma/schema.prisma --script`
+---
+
+## Iteration 2 - US-002: Schema - Analysis
+- What was implemented:
+  - Added Analysis model to Prisma schema with all required fields
+  - Added enums: Region (AU/UK/US), DocumentType (PDF/PNG/JPG/TIFF/DXF/IFC), AnalysisStatus (7 states), OverallStatus (PASS/CONDITIONAL/FAIL)
+  - Analysis fields: id (UUID), project_id (FK), report_ref (unique), document_name, document_url, document_size, document_type, page_count, description (nullable), page_numbers (nullable), region, selected_codes (JSON), status, current_stage (nullable), compliance_score (nullable), overall_status (nullable), count fields (all default 0), timestamps
+  - Cascade delete: Project -> Analyses
+  - Created migration SQL file
+- Files changed:
+  - app/prisma/schema.prisma (modified - added enums and Analysis model)
+  - app/prisma/migrations/0002_analysis/migration.sql (new)
+- Learnings for future iterations:
+  - Each migration folder needs its own migration.sql file
+  - Prisma generate must be run after schema changes to update the client
+  - The analyses relation was added to the Project model for cascade functionality
 ---

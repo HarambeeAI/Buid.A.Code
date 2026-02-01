@@ -286,10 +286,10 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a developer, I need the Analysis table for compliance jobs.
 
 **Acceptance Criteria:**
-- [ ] Analysis: id, project_id FK, report_ref (unique), document_name, document_url, document_size, document_type (enum PDF/PNG/JPG/TIFF/DXF/IFC), page_count, description, page_numbers nullable, region (enum AU/UK/US), selected_codes JSON, status (enum PENDING/CLASSIFYING/ANALYSING/VALIDATING/GENERATING/COMPLETED/FAILED), current_stage nullable, compliance_score nullable, overall_status (enum PASS/CONDITIONAL/FAIL nullable), critical_count default 0, warning_count default 0, compliant_count default 0, not_assessed_count default 0, total_checks default 0, started_at, completed_at, created_at
-- [ ] Cascade: Project -> Analyses
-- [ ] Migration runs
-- [ ] Typecheck passes
+- [x] Analysis: id, project_id FK, report_ref (unique), document_name, document_url, document_size, document_type (enum PDF/PNG/JPG/TIFF/DXF/IFC), page_count, description, page_numbers nullable, region (enum AU/UK/US), selected_codes JSON, status (enum PENDING/CLASSIFYING/ANALYSING/VALIDATING/GENERATING/COMPLETED/FAILED), current_stage nullable, compliance_score nullable, overall_status (enum PASS/CONDITIONAL/FAIL nullable), critical_count default 0, warning_count default 0, compliant_count default 0, not_assessed_count default 0, total_checks default 0, started_at, completed_at, created_at
+- [x] Cascade: Project -> Analyses
+- [x] Migration runs
+- [x] Typecheck passes
 
 ### US-003: Schema - Finding
 **Description:** As a developer, I need the Finding table for compliance results.
