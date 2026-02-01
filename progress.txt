@@ -159,3 +159,39 @@
   - Always use upsert for webhook handlers to handle duplicate deliveries
   - Get raw body with `request.text()` before parsing JSON for signature verification
 ---
+
+## Iteration 9 - US-009: GET /api/auth/me
+- What was implemented:
+  - GET /api/auth/me endpoint for fetching authenticated user profile
+  - Validates JWT via Logto session using existing requireAuth() helper
+  - Fetches user from database using logto_user_id from session
+  - Returns { id, email, name, tier, analyses_remaining, role }
+  - Returns 401 if not authenticated, 404 if user not in database
+- Files changed:
+  - app/src/app/api/auth/me/route.ts (new) - User profile endpoint
+  - PRD.md (modified) - Marked US-009 complete
+- Learnings for future iterations:
+  - The existing auth.ts requireAuth() pattern works well for API routes
+  - Use Prisma select to return only needed fields for security and performance
+  - Logto session userId maps to logto_user_id in our User model
+---
+
+## Iteration 10 - US-010: Project CRUD
+- What was implemented:
+  - POST /api/projects - creates project with name, description, folder_id (optional)
+  - GET /api/projects - lists projects with pagination (page, limit params), includes analysis_count
+  - GET /api/projects/:id - returns project detail, 403 if not owner
+  - PATCH /api/projects/:id - updates project fields, 403 if not owner
+  - DELETE /api/projects/:id - deletes project with cascade to analyses
+  - All endpoints require authentication (401 if not authenticated)
+  - Folder ownership validated when assigning folder_id
+  - Zod validation for all inputs
+- Files changed:
+  - app/src/app/api/projects/route.ts (new) - POST and GET list endpoints
+  - app/src/app/api/projects/[id]/route.ts (new) - GET detail, PATCH, DELETE endpoints
+- Learnings for future iterations:
+  - Use zod's `.issues[0].message` not `.errors[0].message` for error messages
+  - Next.js 15+ dynamic route params are async: use `await context.params`
+  - Transform Prisma `_count` relations to flat fields for cleaner API responses
+  - Use `z.coerce.number()` for query params that come as strings
+---

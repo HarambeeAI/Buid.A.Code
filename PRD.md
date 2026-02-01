@@ -363,13 +363,13 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a user, I want project management endpoints.
 
 **Acceptance Criteria:**
-- [ ] POST creates with name/description/folder_id
-- [ ] GET list paginated with analysis count
-- [ ] GET detail (403 if not owner)
-- [ ] PATCH updates
-- [ ] DELETE cascades
-- [ ] All require auth
-- [ ] Typecheck passes
+- [x] POST creates with name/description/folder_id
+- [x] GET list paginated with analysis count
+- [x] GET detail (403 if not owner)
+- [x] PATCH updates
+- [x] DELETE cascades
+- [x] All require auth
+- [x] Typecheck passes
 
 ### US-011: Folder CRUD
 **Description:** As a user, I want folder endpoints.
