@@ -195,3 +195,19 @@
   - Transform Prisma `_count` relations to flat fields for cleaner API responses
   - Use `z.coerce.number()` for query params that come as strings
 ---
+
+## Iteration 11 - US-011: Folder CRUD
+- What was implemented:
+  - POST /api/folders - creates a folder with name, returns folder with id, name, created_at
+  - GET /api/folders - lists all folders for user with project_count, ordered by name
+  - PATCH /api/folders/:id - renames a folder, 403 if not owner
+  - DELETE /api/folders/:id - sets folder_id to null on projects in folder, then deletes folder (via transaction)
+  - All endpoints require authentication (401 if not authenticated)
+  - Zod validation for all inputs
+- Files changed:
+  - app/src/app/api/folders/route.ts (new) - POST and GET list endpoints
+  - app/src/app/api/folders/[id]/route.ts (new) - PATCH and DELETE endpoints
+- Learnings for future iterations:
+  - Use Prisma $transaction for operations that need atomicity (e.g., update projects then delete folder)
+  - Folder delete uses SetNull behavior defined in schema, but explicit updateMany + delete in transaction is safer for clarity
+---

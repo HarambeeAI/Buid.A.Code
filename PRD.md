@@ -375,9 +375,9 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a user, I want folder endpoints.
 
 **Acceptance Criteria:**
-- [ ] POST creates, GET lists, PATCH renames, DELETE removes (projects get null folder_id)
-- [ ] All require auth
-- [ ] Typecheck passes
+- [x] POST creates, GET lists, PATCH renames, DELETE removes (projects get null folder_id)
+- [x] All require auth
+- [x] Typecheck passes
 
 ### US-012: Analysis Creation with Tier Validation
 **Description:** As a user, I want to create analyses respecting tier limits.
