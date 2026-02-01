@@ -564,11 +564,11 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a user, I want grouped, confidence-scored findings.
 
 **Acceptance Criteria:**
-- [ ] Grouped by category headers
-- [ ] Cards: code_ref, status badge, confidence badge (HIGH green/MEDIUM amber/LOW red dashed), Required vs As Shown, page ref, recommendation callout
-- [ ] Critical: red border, LOW confidence: dashed + "Verify manually"
-- [ ] Typecheck passes
-- [ ] Verify changes work in browser
+- [x] Grouped by category headers
+- [x] Cards: code_ref, status badge, confidence badge (HIGH green/MEDIUM amber/LOW red dashed), Required vs As Shown, page ref, recommendation callout
+- [x] Critical: red border, LOW confidence: dashed + "Verify manually"
+- [x] Typecheck passes
+- [x] Verify changes work in browser
 
 ### US-031: Quick-Nav Sidebar + Filtering
 **Description:** As a user, I want to filter and jump to findings.

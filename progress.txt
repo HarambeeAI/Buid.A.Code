@@ -624,3 +624,28 @@
   - Temporary highlight with classList add/remove + setTimeout for scroll-to indication
   - clipboard API (navigator.clipboard.writeText) for share link copying
 ---
+
+## Iteration 31 - US-030: Finding Cards with Categories and Confidence
+- What was implemented:
+  - Verified US-030 was already implemented as part of US-029 Report Layout iteration
+  - FindingCard component at report/page.tsx:817-962 has all required features:
+    - Category headers with grouping (lines 734-750)
+    - code_ref display (line 869)
+    - Status badge with colors (lines 833-846)
+    - Confidence badge: HIGH green, MEDIUM amber, LOW red with dashed border (lines 848-859)
+    - Required vs As Shown display (lines 896-915)
+    - Page reference (lines 883-887)
+    - Recommendation callout with blue styling (lines 939-960)
+    - Critical findings: red left border + red background tint (lines 819-821)
+    - LOW confidence: dashed border + "Verify manually" warning (lines 925-936)
+  - TypeScript typecheck passes
+  - Next.js build passes
+  - Dev server responds with HTTP 200
+- Files changed:
+  - PRD.md (modified) - Marked US-030 complete
+  - progress.txt (modified) - Added this iteration
+- Learnings for future iterations:
+  - Check if acceptance criteria overlap with previous user stories before implementing
+  - US-029 and US-030 had significant overlap - the FindingCard component was built as part of the three-panel layout
+  - When reviewing PRD, note that related components may have been built together even if split into separate user stories
+---
