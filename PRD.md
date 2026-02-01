@@ -354,10 +354,10 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a user, I want my profile and tier info.
 
 **Acceptance Criteria:**
-- [ ] Validates JWT via Logto JWKS
-- [ ] Returns { id, email, name, tier, analyses_remaining, role }
-- [ ] 401 if invalid
-- [ ] Typecheck passes
+- [x] Validates JWT via Logto JWKS
+- [x] Returns { id, email, name, tier, analyses_remaining, role }
+- [x] 401 if invalid
+- [x] Typecheck passes
 
 ### US-010: Project CRUD
 **Description:** As a user, I want project management endpoints.
