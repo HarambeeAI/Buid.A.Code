@@ -943,3 +943,40 @@
   - File upload uses FormData API with multipart/form-data
   - S3 file keys should include code ID for organization: `codes/{codeId}/{timestamp}_{filename}`
 ---
+
+## Iteration 44 - US-043: Admin - Requirement Review + Edit
+- What was implemented:
+  - GET /api/admin/requirements/:id - fetches full requirement details with building code relation
+  - PATCH /api/admin/requirements/:id - updates requirement with JSON field support
+  - DELETE /api/admin/requirements/:id - deletes a requirement
+  - PATCH /api/admin/requirements/:id/verify - marks DRAFT requirement as VERIFIED
+  - POST /api/admin/codes/:id/verify-all - bulk verifies all DRAFT requirements for a code
+  - RequirementEditModal component with:
+    - Two-column layout: basic fields (left) and JSON editors (right)
+    - Edit form with all fields: code_ref, title, category, check_type, full_text, extraction_guidance, evaluation_guidance, source_page
+    - JSON editors for thresholds, applies_to_drawing_types, applies_to_building_types, applies_to_spaces, exceptions
+    - Verify button (for DRAFT status only)
+    - Delete button with confirmation
+    - Save button with validation
+  - Updated admin code detail page with:
+    - Table now shows code_ref, title, category, status, page, and edit action
+    - Row click opens edit modal
+    - "Verify All" button for bulk verification of draft requirements
+    - Status filter dropdown
+  - TypeScript typecheck passes
+  - Next.js build passes
+  - Dev server responds (307 redirect for admin routes - expected, requires auth)
+- Files changed:
+  - app/src/app/api/admin/requirements/[id]/route.ts (new) - GET, PATCH, DELETE endpoints
+  - app/src/app/api/admin/requirements/[id]/verify/route.ts (new) - Single requirement verify endpoint
+  - app/src/app/api/admin/codes/[id]/verify-all/route.ts (new) - Bulk verify endpoint
+  - app/src/app/admin/codes/[id]/page.tsx (modified) - Added edit modal and bulk verify
+  - PRD.md (modified) - Marked US-043 complete
+- Learnings for future iterations:
+  - Use z.unknown() for JSON fields in Zod schemas to satisfy Prisma's InputJsonValue type
+  - Cast JSON fields to Prisma.InputJsonValue when building update objects
+  - Prisma enums are uppercase (e.g., MEASUREMENT_THRESHOLD not measurement_threshold)
+  - Modal pattern: load full data on row click, show loading state, then open modal
+  - Bulk operations should use Prisma updateMany for efficiency
+  - JSON editor pattern: stringify on load, parse on save with error handling
+---

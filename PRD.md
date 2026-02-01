@@ -689,12 +689,12 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As an admin, I want to verify extracted requirements.
 
 **Acceptance Criteria:**
-- [ ] Table: code_ref, title, category, status
-- [ ] Edit form with all fields including JSON editors for thresholds/exceptions
-- [ ] Verify button, Delete button, Bulk "Verify All"
-- [ ] Status filter
-- [ ] Typecheck passes
-- [ ] Verify changes work in browser
+- [x] Table: code_ref, title, category, status
+- [x] Edit form with all fields including JSON editors for thresholds/exceptions
+- [x] Verify button, Delete button, Bulk "Verify All"
+- [x] Status filter
+- [x] Typecheck passes
+- [x] Verify changes work in browser
 
 ### US-044: Admin - Publish Code
 **Description:** As an admin, I want to publish verified codes.
