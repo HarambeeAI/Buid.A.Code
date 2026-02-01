@@ -47,3 +47,19 @@
   - Prisma generate must be run after schema changes to update the client
   - The analyses relation was added to the Project model for cascade functionality
 ---
+
+## Iteration 3 - US-003: Schema - Finding
+- What was implemented:
+  - Added Finding model to Prisma schema with all required fields
+  - Added enums: FindingCategory (10 values: STRUCTURAL, FIRE_SAFETY, EGRESS, ACCESSIBILITY, ENERGY, GENERAL_BUILDING, SITE, PLUMBING, ELECTRICAL, MECHANICAL), FindingStatus (4 values: COMPLIANT, WARNING, CRITICAL, NOT_ASSESSED), Confidence (HIGH, MEDIUM, LOW)
+  - Finding fields: id (UUID), analysis_id (FK), code_reference, category, status, confidence, description, required_value, proposed_value (nullable), page_number (nullable), location (nullable), analysis_notes, recommendation (nullable), raw_extraction (JSON nullable), sort_order
+  - Cascade delete: Analysis -> Findings
+  - Composite index on (analysis_id, sort_order) for efficient querying
+  - Created migration SQL file
+- Files changed:
+  - app/prisma/schema.prisma (modified - added enums and Finding model, added findings relation to Analysis)
+  - app/prisma/migrations/0003_finding/migration.sql (new)
+- Learnings for future iterations:
+  - When adding a new model with a relation, update both sides (Finding model + findings[] on Analysis)
+  - Composite indexes use @@index([field1, field2]) syntax in Prisma
+---

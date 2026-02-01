@@ -52,6 +52,33 @@ enum OverallStatus {
   FAIL
 }
 
+// Enums for Finding - US-003
+enum FindingCategory {
+  STRUCTURAL
+  FIRE_SAFETY
+  EGRESS
+  ACCESSIBILITY
+  ENERGY
+  GENERAL_BUILDING
+  SITE
+  PLUMBING
+  ELECTRICAL
+  MECHANICAL
+}
+
+enum FindingStatus {
+  COMPLIANT
+  WARNING
+  CRITICAL
+  NOT_ASSESSED
+}
+
+enum Confidence {
+  HIGH
+  MEDIUM
+  LOW
+}
+
 // User model - US-001
 model User {
   id                 String    @id @default(uuid()) @db.Uuid
@@ -131,7 +158,34 @@ model Analysis {
   created_at       DateTime       @default(now())
 
   // Relations
-  project Project @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  project  Project   @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  findings Finding[]
 
   @@map("analyses")
+}
+
+// Finding model - US-003
+model Finding {
+  id              String          @id @default(uuid()) @db.Uuid
+  analysis_id     String          @db.Uuid
+  code_reference  String
+  category        FindingCategory
+  status          FindingStatus
+  confidence      Confidence
+  description     String
+  required_value  String
+  proposed_value  String?
+  page_number     Int?
+  location        String?
+  analysis_notes  String
+  recommendation  String?
+  raw_extraction  Json?
+  sort_order      Int
+
+  // Relations
+  analysis Analysis @relation(fields: [analysis_id], references: [id], onDelete: Cascade)
+
+  // Index for efficient querying
+  @@index([analysis_id, sort_order])
+  @@map("findings")
 }

@@ -295,11 +295,11 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a developer, I need the Finding table for compliance results.
 
 **Acceptance Criteria:**
-- [ ] Finding: id, analysis_id FK, code_reference, category (enum 10 values), status (enum 4 values), confidence (enum HIGH/MEDIUM/LOW), description, required_value, proposed_value nullable, page_number nullable, location nullable, analysis_notes, recommendation nullable, raw_extraction JSON nullable, sort_order
-- [ ] Cascade: Analysis -> Findings
-- [ ] Index on analysis_id + sort_order
-- [ ] Migration runs
-- [ ] Typecheck passes
+- [x] Finding: id, analysis_id FK, code_reference, category (enum 10 values), status (enum 4 values), confidence (enum HIGH/MEDIUM/LOW), description, required_value, proposed_value nullable, page_number nullable, location nullable, analysis_notes, recommendation nullable, raw_extraction JSON nullable, sort_order
+- [x] Cascade: Analysis -> Findings
+- [x] Index on analysis_id + sort_order
+- [x] Migration runs
+- [x] Typecheck passes
 
 ### US-004: Schema - BuildingCode and CodeRequirement
 **Description:** As a developer, I need code tables with full requirement schema.
