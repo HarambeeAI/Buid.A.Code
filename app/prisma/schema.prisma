@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Enums for User
+enum Tier {
+  FREE
+  PRO
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+// User model - US-001
+model User {
+  id                 String    @id @default(uuid()) @db.Uuid
+  logto_user_id      String    @unique
+  email              String
+  name               String?
+  tier               Tier      @default(FREE)
+  analyses_remaining Int?      @default(2)
+  role               Role      @default(USER)
+  created_at         DateTime  @default(now())
+  updated_at         DateTime  @updatedAt
+
+  // Relations
+  projects Project[]
+  folders  Folder[]
+
+  @@map("users")
+}
+
+// Folder model - US-001
+model Folder {
+  id         String   @id @default(uuid()) @db.Uuid
+  user_id    String   @db.Uuid
+  name       String
+  created_at DateTime @default(now())
+
+  // Relations
+  user     User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  projects Project[]
+
+  @@map("folders")
+}
+
+// Project model - US-001
+model Project {
+  id          String   @id @default(uuid()) @db.Uuid
+  user_id     String   @db.Uuid
+  name        String
+  description String?
+  folder_id   String?  @db.Uuid
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  // Relations
+  user   User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  folder Folder? @relation(fields: [folder_id], references: [id], onDelete: SetNull)
+
+  @@map("projects")
+}
