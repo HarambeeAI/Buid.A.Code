@@ -253,6 +253,28 @@ export async function POST(request: NextRequest, context: RouteContext) {
       });
     });
 
+    // Enqueue the analysis for processing (dynamic import to avoid build-time Redis connection)
+    try {
+      const { enqueueAnalysis } = await import("@/lib/queue");
+      await enqueueAnalysis(analysis.id);
+    } catch (queueError) {
+      console.error("Failed to enqueue analysis:", queueError);
+
+      // Mark analysis as FAILED since it can't be processed
+      await prisma.analysis.update({
+        where: { id: analysis.id },
+        data: { status: "FAILED" },
+      });
+
+      return NextResponse.json(
+        {
+          error: "Internal Server Error",
+          message: "Failed to queue analysis for processing",
+        },
+        { status: 500 }
+      );
+    }
+
     return NextResponse.json(analysis, { status: 201 });
   } catch (error) {
     console.error("Error creating analysis:", error);

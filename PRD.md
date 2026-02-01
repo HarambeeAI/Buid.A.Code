@@ -651,10 +651,10 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a developer, I need job dispatch on analysis creation.
 
 **Acceptance Criteria:**
-- [ ] POST analysis enqueues BullMQ job { analysisId }
-- [ ] After DB insert + tier validation
-- [ ] Queue failure: set FAILED, return 500
-- [ ] Typecheck passes
+- [x] POST analysis enqueues BullMQ job { analysisId }
+- [x] After DB insert + tier validation
+- [x] Queue failure: set FAILED, return 500
+- [x] Typecheck passes
 
 ### US-040: Admin Route Protection
 **Description:** As a developer, I need admin-only routes.
