@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
+// Use Node.js runtime for Prisma compatibility
+export const runtime = "nodejs";
+
 /**
  * Middleware to protect admin routes.
  * Checks role=ADMIN on /api/admin/* and /admin/* routes.

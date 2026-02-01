@@ -669,10 +669,10 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As an admin, I want to manage building codes.
 
 **Acceptance Criteria:**
-- [ ] /admin/codes lists all codes: name, region, version, status chip, requirement count
-- [ ] "Add Code" form: name, region, code_id, version, description -> DRAFT
-- [ ] Typecheck passes
-- [ ] Verify changes work in browser
+- [x] /admin/codes lists all codes: name, region, version, status chip, requirement count
+- [x] "Add Code" form: name, region, code_id, version, description -> DRAFT
+- [x] Typecheck passes
+- [x] Verify changes work in browser
 
 ### US-042: Admin - AI Requirement Extraction
 **Description:** As an admin, I want AI-extracted requirements from code PDFs.
