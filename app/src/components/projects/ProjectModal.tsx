@@ -20,6 +20,7 @@ type ProjectModalProps = {
   onClose: () => void;
   onSuccess: (project: Project) => void;
   project?: Project | null; // If provided, it's edit mode
+  defaultFolderId?: string; // Default folder when creating new project
 };
 
 export default function ProjectModal({
@@ -27,6 +28,7 @@ export default function ProjectModal({
   onClose,
   onSuccess,
   project,
+  defaultFolderId,
 }: ProjectModalProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -65,7 +67,7 @@ export default function ProjectModal({
       } else {
         setName("");
         setDescription("");
-        setFolderId(null);
+        setFolderId(defaultFolderId || null);
       }
       setError(null);
     }

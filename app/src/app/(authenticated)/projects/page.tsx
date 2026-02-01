@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import ProjectModal from "@/components/projects/ProjectModal";
 
@@ -24,6 +25,11 @@ type PaginationData = {
 type ProjectsData = {
   projects: Project[];
   pagination: PaginationData;
+};
+
+type Folder = {
+  id: string;
+  name: string;
 };
 
 function formatDate(dateString: string): string {
@@ -106,7 +112,7 @@ function ProjectCard({
   );
 }
 
-function EmptyState({ onCreateClick }: { onCreateClick: () => void }) {
+function EmptyState({ onCreateClick, folderName }: { onCreateClick: () => void; folderName?: string }) {
   return (
     <div className="text-center py-16">
       <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
@@ -125,11 +131,12 @@ function EmptyState({ onCreateClick }: { onCreateClick: () => void }) {
         </svg>
       </div>
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-        No projects yet
+        {folderName ? `No projects in "${folderName}"` : "No projects yet"}
       </h3>
       <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-sm mx-auto">
-        Create your first project to start organizing your building plan
-        analyses.
+        {folderName
+          ? "Create a project in this folder or move existing projects here."
+          : "Create your first project to start organizing your building plan analyses."}
       </p>
       <button
         onClick={onCreateClick}
@@ -148,7 +155,7 @@ function EmptyState({ onCreateClick }: { onCreateClick: () => void }) {
             d="M12 4v16m8-8H4"
           />
         </svg>
-        Create Your First Project
+        {folderName ? "Create Project" : "Create Your First Project"}
       </button>
     </div>
   );
@@ -247,20 +254,44 @@ function LoadingSkeleton() {
 }
 
 export default function ProjectsPage() {
+  const searchParams = useSearchParams();
+  const folderId = searchParams.get("folder");
+
   const [data, setData] = useState<ProjectsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [folder, setFolder] = useState<Folder | null>(null);
 
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
 
-  const fetchProjects = useCallback(async (page: number) => {
+  // Fetch folder name when filtering by folder
+  const fetchFolderName = useCallback(async (id: string) => {
+    try {
+      const res = await fetch("/api/folders");
+      if (res.ok) {
+        const data = await res.json();
+        const found = data.folders?.find((f: Folder) => f.id === id);
+        if (found) {
+          setFolder(found);
+        }
+      }
+    } catch {
+      // Silently fail
+    }
+  }, []);
+
+  const fetchProjects = useCallback(async (page: number, filterFolderId?: string | null) => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/projects?page=${page}&limit=12`);
+      let url = `/api/projects?page=${page}&limit=12`;
+      if (filterFolderId) {
+        url += `&folder_id=${filterFolderId}`;
+      }
+      const res = await fetch(url);
       if (!res.ok) {
         if (res.status === 401) {
           window.location.href = "/api/auth/login";
@@ -280,11 +311,16 @@ export default function ProjectsPage() {
   }, []);
 
   useEffect(() => {
-    fetchProjects(1);
-  }, [fetchProjects]);
+    fetchProjects(1, folderId);
+    if (folderId) {
+      fetchFolderName(folderId);
+    } else {
+      setFolder(null);
+    }
+  }, [fetchProjects, fetchFolderName, folderId]);
 
   const handlePageChange = (page: number) => {
-    fetchProjects(page);
+    fetchProjects(page, folderId);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -305,7 +341,7 @@ export default function ProjectsPage() {
 
   const handleModalSuccess = () => {
     // Refresh the projects list
-    fetchProjects(currentPage);
+    fetchProjects(currentPage, folderId);
   };
 
   if (loading && !data) {
@@ -317,7 +353,7 @@ export default function ProjectsPage() {
       <div className="text-center py-12">
         <p className="text-red-600 dark:text-red-400 mb-4">{error}</p>
         <button
-          onClick={() => fetchProjects(currentPage)}
+          onClick={() => fetchProjects(currentPage, folderId)}
           className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
         >
           Try again
@@ -335,9 +371,31 @@ export default function ProjectsPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
-          Projects
-        </h1>
+        <div className="flex items-center gap-3">
+          <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
+            Projects
+          </h1>
+          {folder && (
+            <div className="flex items-center gap-2">
+              <span className="text-gray-400">/</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-full text-sm font-medium">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                </svg>
+                {folder.name}
+              </span>
+              <Link
+                href="/projects"
+                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                title="Clear filter"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </Link>
+            </div>
+          )}
+        </div>
         <button
           onClick={openCreateModal}
           className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
@@ -360,7 +418,7 @@ export default function ProjectsPage() {
       </div>
 
       {projects.length === 0 ? (
-        <EmptyState onCreateClick={openCreateModal} />
+        <EmptyState onCreateClick={openCreateModal} folderName={folder?.name} />
       ) : (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -382,6 +440,7 @@ export default function ProjectsPage() {
         onClose={handleModalClose}
         onSuccess={handleModalSuccess}
         project={editingProject}
+        defaultFolderId={folderId || undefined}
       />
     </div>
   );

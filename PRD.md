@@ -740,10 +740,10 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a user, I want folders in the sidebar.
 
 **Acceptance Criteria:**
-- [ ] Expandable folders section, click filters projects
-- [ ] New Folder inline, rename/delete via menu
-- [ ] Typecheck passes
-- [ ] Verify changes work in browser
+- [x] Expandable folders section, click filters projects
+- [x] New Folder inline, rename/delete via menu
+- [x] Typecheck passes
+- [x] Verify changes work in browser
 
 ### US-049: Keyboard Shortcuts
 **Description:** As a power user, I want shortcuts.

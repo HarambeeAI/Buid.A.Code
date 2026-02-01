@@ -1082,3 +1082,33 @@
   - RegionFlag component pattern for displaying flags from region data
   - StatusChip component pattern for human-readable status labels with styling
 ---
+
+## Iteration 49 - US-048: Folder Sidebar Integration
+- What was implemented:
+  - Enhanced Sidebar component with expandable folders section
+  - Folders fetched from /api/folders and displayed with project counts
+  - Folder click navigates to /projects?folder={id} to filter projects
+  - Toggle folder selection: clicking same folder clears the filter
+  - "New Folder" inline input for creating folders directly in sidebar
+  - Context menu (right-click or three-dot button) with Rename and Delete options
+  - Rename inline: clicking Rename shows inline input with existing name
+  - Delete confirmation dialog with warning about projects being moved out
+  - Projects page updated to support folder filtering via ?folder= query param
+  - Folder name badge displayed in Projects page header when filtering
+  - Clear filter (X) button next to folder name to reset filter
+  - Empty state message customized for folder-filtered views
+  - ProjectModal updated with defaultFolderId prop for pre-selecting folder
+  - Removed standalone /folders nav item from sidebar (folders now inline)
+- Files changed:
+  - app/src/components/layout/Sidebar.tsx (modified - added folders section)
+  - app/src/app/(authenticated)/projects/page.tsx (modified - folder filtering support)
+  - app/src/components/projects/ProjectModal.tsx (modified - added defaultFolderId prop)
+  - PRD.md (modified - marked US-048 complete)
+- Learnings for future iterations:
+  - useSearchParams() hook reads query params in client components
+  - Context menu pattern: store {folderId, x, y} in state, render fixed positioned div
+  - Inline edit pattern: renamingId state + ref for auto-focus
+  - Keyboard handling: Enter to submit, Escape to cancel for inline inputs
+  - Folder filter uses different query param name (folder) than API param name (folder_id)
+  - Projects page fetches folder name separately to display in header
+---
