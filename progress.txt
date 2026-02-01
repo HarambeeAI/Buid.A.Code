@@ -577,3 +577,27 @@
   - Processing time estimate: ~3 seconds per requirement-page pair (rough heuristic)
   - SummarySection component pattern for grouped information display
 ---
+
+## Iteration 29 - US-028: Processing Screen
+- What was implemented:
+  - Full-screen processing page at /projects/:id/analyses/:analysisId/processing
+  - Vertical timeline showing 5 stages: Uploading, Classifying, Analysing, Validating, Generating
+  - Spinner animation with elapsed time display for active step
+  - Green checkmarks for completed steps
+  - Red X icon for failed steps with "Failed at this step" message
+  - Polls /api/analyses/:id/status every 5 seconds
+  - Auto-redirect to report page on COMPLETED status (with 1.5s delay to show completion state)
+  - Error state with retry button and back to project link for FAILED status
+  - Completed state shows success message with manual link to report
+  - Dynamic description for Analysing step showing current_stage or total_checks
+  - Elapsed time formatting (seconds/minutes)
+- Files changed:
+  - app/src/app/(authenticated)/projects/[id]/analyses/[analysisId]/processing/page.tsx (new) - Processing screen
+  - PRD.md (modified) - Marked US-028 complete
+- Learnings for future iterations:
+  - Use useRef for start time to persist across re-renders without causing re-renders
+  - Timer pattern: set interval on mount, clear on unmount or status change
+  - StepIcon component pattern: separate status logic from rendering
+  - STATUS_ORDER mapping for comparing progress between steps
+  - Small delay before redirect lets users see completion state (better UX)
+---

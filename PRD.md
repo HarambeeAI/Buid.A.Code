@@ -542,12 +542,12 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a user, I want live progress.
 
 **Acceptance Criteria:**
-- [ ] Timeline: Uploading, Classifying, Analysing (X of Y), Validating, Generating
-- [ ] Spinner + elapsed for active, checkmark for complete
-- [ ] Polls /status every 5s
-- [ ] Auto-redirect on COMPLETED, error + retry on FAILED
-- [ ] Typecheck passes
-- [ ] Verify changes work in browser
+- [x] Timeline: Uploading, Classifying, Analysing (X of Y), Validating, Generating
+- [x] Spinner + elapsed for active, checkmark for complete
+- [x] Polls /status every 5s
+- [x] Auto-redirect on COMPLETED, error + retry on FAILED
+- [x] Typecheck passes
+- [x] Verify changes work in browser
 
 ### US-029: Report Layout - Header, Score, Quick-Nav
 **Description:** As a user, I want professional report layout.
