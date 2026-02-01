@@ -8,6 +8,7 @@ import { ANALYSIS_QUEUE_NAME, AnalysisJobData } from "../lib/queue";
 import { normaliseDocument, NormalisationResult } from "../pipeline/document-normalisation";
 import { classifyPages } from "../pipeline/page-classification";
 import { runMatrixAnalysis } from "../pipeline/matrix-analysis";
+import { runCrossValidation } from "../pipeline/cross-validation";
 
 // Custom backoff delays in milliseconds (30s, 60s, 120s)
 const BACKOFF_DELAYS = [30000, 60000, 120000];
@@ -119,10 +120,21 @@ async function processAnalysisJob(job: Job<AnalysisJobData>): Promise<void> {
 
   console.log(`[Worker] Matrix analysis complete: ${matrixResult.totalChecks} checks performed`);
 
-  // TODO: Implement remaining pipeline stages in future user stories (US-037 to US-038)
+  // Stage 4: Cross-Validation + Scoring (US-037)
+  console.log(`[Worker] Starting cross-validation for ${analysisId}`);
+  const validationResult = await runCrossValidation(
+    prisma,
+    analysisId,
+    matrixResult.results
+  );
+
+  console.log(`[Worker] Cross-validation complete: score ${validationResult.complianceScore}%, status ${validationResult.overallStatus}`);
+  console.log(`[Worker] Conflicts detected: ${validationResult.conflicts.length}`);
+  console.log(`[Worker] Final counts - Critical: ${validationResult.statusCounts.critical}, Warning: ${validationResult.statusCounts.warning}, Compliant: ${validationResult.statusCounts.compliant}, Not Assessed: ${validationResult.statusCounts.notAssessed}`);
+
+  // TODO: Implement remaining pipeline stages in future user stories (US-038)
   // The pipeline stages will be:
-  // 4. Cross-Validation + Scoring (US-037) - validate and score
-  // 5. Recommendations + Completion (US-038) - generate recommendations
+  // 5. Recommendations + Completion (US-038) - generate recommendations and save findings
 }
 
 // Create the worker

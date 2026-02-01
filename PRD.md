@@ -632,11 +632,11 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a developer, I need validation and scoring.
 
 **Acceptance Criteria:**
-- [ ] Cross-page comparison, conflict flagging
-- [ ] Deduplication keeping highest confidence
-- [ ] Score calculation, overall_status assignment
-- [ ] Count fields populated
-- [ ] Typecheck passes
+- [x] Cross-page comparison, conflict flagging
+- [x] Deduplication keeping highest confidence
+- [x] Score calculation, overall_status assignment
+- [x] Count fields populated
+- [x] Typecheck passes
 
 ### US-038: Pipeline - Recommendations + Completion
 **Description:** As a developer, I need final recommendations and save.
