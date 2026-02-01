@@ -520,13 +520,13 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a user, I want region and code selection with limits.
 
 **Acceptance Criteria:**
-- [ ] Region cards with flags, loads codes on select
-- [ ] Checkboxes with recommended badges
-- [ ] FREE: max 3, extras show lock + upgrade tooltip
-- [ ] "Don't see your code?" opens request modal
-- [ ] Next disabled until >= 1 selected
-- [ ] Typecheck passes
-- [ ] Verify changes work in browser
+- [x] Region cards with flags, loads codes on select
+- [x] Checkboxes with recommended badges
+- [x] FREE: max 3, extras show lock + upgrade tooltip
+- [x] "Don't see your code?" opens request modal
+- [x] Next disabled until >= 1 selected
+- [x] Typecheck passes
+- [x] Verify changes work in browser
 
 ### US-027: Wizard Step 3 - Review + Submit
 **Description:** As a user, I want to review before submitting.
