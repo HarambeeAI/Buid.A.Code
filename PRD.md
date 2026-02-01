@@ -422,9 +422,9 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a user, I want to browse codes.
 
 **Acceptance Criteria:**
-- [ ] GET regions with flags, GET codes for region (ACTIVE only) with requirement_count
-- [ ] 404 for unknown region
-- [ ] Typecheck passes
+- [x] GET regions with flags, GET codes for region (ACTIVE only) with requirement_count
+- [x] 404 for unknown region
+- [x] Typecheck passes
 
 ### US-017: Code Request Endpoints
 **Description:** As a user, I want to request codes.
