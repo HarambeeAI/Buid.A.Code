@@ -660,10 +660,10 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a developer, I need admin-only routes.
 
 **Acceptance Criteria:**
-- [ ] Middleware checks role=ADMIN on /api/admin/* and /admin/*
-- [ ] 403 for non-admin
-- [ ] Logto RBAC "admin" role configured
-- [ ] Typecheck passes
+- [x] Middleware checks role=ADMIN on /api/admin/* and /admin/*
+- [x] 403 for non-admin
+- [x] Logto RBAC "admin" role configured
+- [x] Typecheck passes
 
 ### US-041: Admin - Code List + Create
 **Description:** As an admin, I want to manage building codes.

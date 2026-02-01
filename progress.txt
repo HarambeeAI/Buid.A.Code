@@ -844,3 +844,44 @@
   - Sorting: Critical -> Warning -> Not Assessed -> Compliant, then by category order
   - Use createMany() for batch inserting findings with sort_order index
 ---
+
+## Iteration 40 - US-039: Analysis Creation - Queue Dispatch
+- What was implemented:
+  - POST /api/projects/:id/analyses now enqueues BullMQ job after DB insert + tier validation
+  - Dynamic import of @/lib/queue to avoid build-time Redis connection errors
+  - Queue failure handling: sets analysis status to FAILED and returns 500 error
+  - enqueueAnalysis({ analysisId }) called after successful transaction
+  - TypeScript typecheck passes
+  - Next.js build passes (using dynamic import pattern)
+- Files changed:
+  - app/src/app/api/projects/[id]/analyses/route.ts (modified - added queue dispatch)
+  - PRD.md (modified - marked US-039 complete)
+- Learnings for future iterations:
+  - Use dynamic import for modules that have side effects at import time (like Redis connection)
+  - Pattern: `const { fn } = await import("@/lib/module")` avoids build-time errors
+  - Queue dispatch should happen after successful DB transaction, not inside it
+  - Handle queue errors separately from DB errors for clear error messages
+  - Build-time static analysis imports all modules, so lazy imports help avoid env var issues
+---
+
+## Iteration 41 - US-040: Admin Route Protection
+- What was implemented:
+  - Created Next.js middleware for admin route protection
+  - Middleware checks role=ADMIN on /api/admin/* and /admin/* routes using matcher config
+  - 403 Forbidden response with code "ADMIN_REQUIRED" for non-admin users
+  - 401 Unauthorized for unauthenticated users accessing admin routes
+  - Page routes redirect to login (for unauth) or dashboard (for non-admin)
+  - Uses Prisma to check user.role from database
+  - Added adminForbidden() helper to auth.ts for consistent 403 responses
+  - Logto RBAC integration: users created with role=USER, admins manually promoted in DB
+  - TypeScript typecheck passes
+  - Next.js build passes with middleware active (shows "ƒ Proxy (Middleware)")
+- Files changed:
+  - app/src/middleware.ts (new) - Admin route protection middleware
+  - app/src/lib/auth.ts (modified) - Added adminForbidden helper
+- Learnings for future iterations:
+  - Next.js middleware uses config.matcher with :path* syntax for catch-all routes
+  - Middleware can return NextResponse.json for API routes, NextResponse.redirect for pages
+  - Build output shows "ƒ Proxy (Middleware)" when middleware is active
+  - Middleware runs at edge - can use Prisma but should keep queries minimal
+---
