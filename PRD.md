@@ -730,11 +730,11 @@ POST /api/admin/codes, POST /api/admin/codes/:id/extract, GET /api/admin/codes/:
 **Description:** As a user, I want to browse codes and track requests.
 
 **Acceptance Criteria:**
-- [ ] /codes lists ACTIVE codes by region
-- [ ] "Request a Code" button
-- [ ] "My Requests" tab: request list with status chips
-- [ ] Typecheck passes
-- [ ] Verify changes work in browser
+- [x] /codes lists ACTIVE codes by region
+- [x] "Request a Code" button
+- [x] "My Requests" tab: request list with status chips
+- [x] Typecheck passes
+- [x] Verify changes work in browser
 
 ### US-048: Folder Sidebar Integration
 **Description:** As a user, I want folders in the sidebar.

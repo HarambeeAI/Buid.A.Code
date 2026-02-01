@@ -1036,3 +1036,49 @@
   - Use Promise.all with groupBy results to enrich each group with full request data
   - Status filter can be applied to groupBy query via where clause
 ---
+
+## Iteration 47 - US-046: User - Code Request Form
+- What was implemented:
+  - Extracted CodeRequestModal into shared component at src/components/code-requests/
+  - Modal features: Code Name (required), Region dropdown, Description (optional), Reference URL (optional)
+  - Success confirmation message with checkmark icon and auto-close after 2 seconds
+  - Modal auto-fetches regions if not provided via props
+  - Modal resets form when re-opened
+  - Updated wizard Step 2 to use the shared component (was inline before)
+  - Modal accessible from wizard Step 2 via "Don't see your code?" link
+  - PRD notes modal should also be on /codes page (handled by US-047)
+- Files changed:
+  - app/src/components/code-requests/CodeRequestModal.tsx (new) - Shared modal component
+  - app/src/components/code-requests/index.ts (new) - Component exports
+  - app/src/app/(authenticated)/projects/[id]/analyses/new/step2/page.tsx (modified) - Now uses shared component
+  - PRD.md (modified) - Marked US-046 complete
+- Learnings for future iterations:
+  - Extract reusable modal components early when they'll be used in multiple places
+  - Modal pattern: isOpen, onClose props, optional defaultRegion and regions props
+  - useCallback for fetch functions that run conditionally on isOpen
+  - Reset form state in useEffect when isOpen changes to true
+---
+
+## Iteration 48 - US-047: Supported Codes Page + My Requests
+- What was implemented:
+  - /codes page with two tabs: "Available Codes" and "My Requests"
+  - Available Codes tab shows ACTIVE building codes grouped by region (AU, UK, US)
+  - Each code card displays name, version, code_id, description, requirement count, published date
+  - Region sections with flag emoji and code count
+  - "Request a Code" button in header opens CodeRequestModal
+  - My Requests tab shows user's code requests with status chips
+  - Status chips with color coding: SUBMITTED (blue), UNDER_REVIEW (yellow), IN_PROGRESS (purple), PUBLISHED (green), DECLINED (red)
+  - Request cards show code name, region, description, reference URL link, admin notes, resolved code info
+  - Empty states for both tabs with CTAs to request a code
+  - Uses existing /api/regions and /api/code-requests endpoints
+  - Integrates shared CodeRequestModal component
+- Files changed:
+  - app/src/app/(authenticated)/codes/page.tsx (new) - Supported codes page with tabs
+  - PRD.md (modified) - Marked US-047 complete
+- Learnings for future iterations:
+  - Tab pattern: use activeTab state with conditional rendering for tab content
+  - Fetch data for all tabs upfront on page load for smooth tab switching
+  - Use Promise.all to fetch codes for multiple regions in parallel
+  - RegionFlag component pattern for displaying flags from region data
+  - StatusChip component pattern for human-readable status labels with styling
+---
