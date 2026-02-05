@@ -1,7 +1,4 @@
 -- US-004: BuildingCode and CodeRequirement tables
--- Enable pgvector extension for embedding support
-CREATE EXTENSION IF NOT EXISTS vector;
-
 -- CreateEnum: BuildingCodeStatus
 CREATE TYPE "BuildingCodeStatus" AS ENUM ('DRAFT', 'ACTIVE', 'DEPRECATED');
 
@@ -46,7 +43,6 @@ CREATE TABLE "code_requirements" (
     "evaluation_guidance" TEXT NOT NULL,
     "source_page" INTEGER,
     "status" "CodeRequirementStatus" NOT NULL DEFAULT 'DRAFT',
-    "embedding" vector(768),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 

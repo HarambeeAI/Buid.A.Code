@@ -265,7 +265,6 @@ model CodeRequirement {
   evaluation_guidance      String                @db.Text
   source_page              Int?
   status                   CodeRequirementStatus @default(DRAFT)
-  embedding                Unsupported("vector(768)")?
   created_at               DateTime              @default(now())
   updated_at               DateTime              @updatedAt
 
